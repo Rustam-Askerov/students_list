@@ -232,29 +232,33 @@ class TableRow extends StatelessWidget {
         ),
         margin: EdgeInsets.symmetric(vertical: rowsMargin / 2),
         decoration: rowsDecoration,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...List.generate(
-              rowData.length,
-              (index) => Container(
-                width: _tableController.columnWidth[index],
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.only(
-                    left: index == 0 ? 0 : filedsMargin,
-                    right: index == rowData.length - 1 ? 0 : filedsMargin),
-                child: SelectionArea(
-                  child: Text(
-                    rowData[index],
-                    maxLines: 1,
-                    style: rowDataTextStyle,
-                    overflow: TextOverflow.ellipsis,
-                    //showCursor: true,
+        child: InkWell(
+          onTap: (){
+            print('clicked');
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...List.generate(
+                rowData.length,
+                (index) => Container(
+                  width: _tableController.columnWidth[index],
+                  alignment: Alignment.centerLeft,
+                  margin: EdgeInsets.only(
+                      left: index == 0 ? 0 : filedsMargin,
+                      right: index == rowData.length - 1 ? 0 : filedsMargin),
+                  child: SelectionArea(
+                    child: Text(
+                      rowData[index],
+                      maxLines: 1,
+                      style: rowDataTextStyle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

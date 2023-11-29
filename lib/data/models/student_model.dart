@@ -1,14 +1,15 @@
 class StudentModel {
   final String fio;
-  final String studPassportNum;
+  final num studPassportNum;
   final String department;
-  final String yearOfEntering;
+  final num yearOfEntering;
+  final num yearOfEnding;
   final String degree;
-  final String endIndication;
+  final bool archiveIndicator;
   final String vkrName;
   final String vkrMark;
   final String faculty;
-  final String name;
+  final String departmentName;
   final String departmentHead;
 
   StudentModel(
@@ -16,11 +17,12 @@ class StudentModel {
       this.studPassportNum,
       this.department,
       this.yearOfEntering,
+      this.yearOfEnding,
+      this.archiveIndicator,
       this.degree,
-      this.endIndication,
       this.vkrName,
       this.vkrMark,
       this.faculty,
-      this.name,
+      this.departmentName,
       this.departmentHead);
 }

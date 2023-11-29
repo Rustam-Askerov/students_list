@@ -5,11 +5,12 @@ class HomeScreenController extends GetxController {
   List<StudentModel> data = [
     StudentModel(
         'Иванов Иван Ивановиииииииич',
-        '2648951',
+        2648951,
         'Мат.анализ',
-        '2019',
+        2019,
+        2023,
+        false,
         'Бакалавр',
-        'aaaaaaaaaa',
         'bbbbbbbbbbbbbbbbbbb',
         'Отлично',
         'Математический',
@@ -17,11 +18,12 @@ class HomeScreenController extends GetxController {
         'Невский М.В.'),
     StudentModel(
         'Иванов Иван Иванович',
-        '2648951',
+        2648951,
         'Мат.анализ',
-        '2019',
+        2019,
+        2023,
+        false,
         'Бакалавр',
-        'aaaaaaaaaa',
         'bbbbbbbbbbbbbbbbbbb',
         'Отлично',
         'Математический',
@@ -29,11 +31,12 @@ class HomeScreenController extends GetxController {
         'Невский М.В.'),
     StudentModel(
         'Иванов Иван Иванович',
-        '2648951',
+        2648951,
         'Мат.анализ',
-        '2019',
+        2019,
+        2023,
+        false,
         'Бакалавр',
-        'aaaaaaaaaa',
         'bbbbbbbbbbbbbbbbbbb',
         'Отлично',
         'Математический',
@@ -47,15 +50,15 @@ class HomeScreenController extends GetxController {
       (index) => [
         '',
         data[index].fio,
-        data[index].studPassportNum,
+        data[index].studPassportNum.toString(),
         data[index].department,
-        data[index].yearOfEntering,
+        data[index].yearOfEntering.toString(),
         data[index].degree,
-        data[index].endIndication,
+        data[index].archiveIndicator.toString(),
         data[index].vkrName,
         data[index].vkrMark,
         data[index].faculty,
-        data[index].name,
+        data[index].departmentName,
         data[index].departmentHead,
       ],
     );
@@ -63,15 +66,16 @@ class HomeScreenController extends GetxController {
 
   void addRow(
     String fio,
-    String studPassportNum,
+    num studPassportNum,
     String department,
-    String yearOfEntering,
+    num yearOfEntering,
+    num yearOfEnding,
     String degree,
-    String endIndication,
+    bool archiveIndicator,
     String vkrName,
     String vkrMark,
     String faculty,
-    String name,
+    String departmentName,
     String departmentHead,
   ) {
     data.add(StudentModel(
@@ -79,14 +83,14 @@ class HomeScreenController extends GetxController {
         studPassportNum,
         department,
         yearOfEntering,
+        yearOfEnding,
+        archiveIndicator,
         degree,
-        endIndication,
         vkrName,
         vkrMark,
         faculty,
-        name,
+        departmentName,
         departmentHead));
     update();
   }
-  
 }

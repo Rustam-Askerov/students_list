@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                   rowDataTextStyle: TextStyles.mainText
                       .copyWith(color: ThemeColors.textColorPrimary),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -86,7 +86,6 @@ class Header extends StatelessWidget {
               stepWidth: 500,
               child: SizedBox(
                 height: 35,
-                //width: 840,
                 child: TextFormField(
                   autofocus: false,
                   enableInteractiveSelection: false,
@@ -126,19 +125,7 @@ class Header extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () {
-                Get.to(()=> AddUpdateData());
-                // homeScreenController.addRow(
-                //     'Иванов Иван Ивановиииииииич',
-                //     '2648951',
-                //     'Мат.анализ',
-                //     '2019',
-                //     'Бакалавр',
-                //     'aaaaaaaaaa',
-                //     'bbbbbbbbbbbbbbbbbbb',
-                //     'Отлично',
-                //     'Математический',
-                //     'Мат.анализ',
-                //     'Невский М.В.');
+                Get.to(()=> const AddUpdateData(),routeName: '/AddUpdateData');
               },
               child: IntrinsicWidth(
                 child: Container(
