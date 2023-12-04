@@ -13,46 +13,51 @@ class HomeScreen extends StatelessWidget {
   static final homeScreenController = Get.find<HomeScreenController>();
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: homeScreenController,
-      builder: (controller) => Scaffold(
-        backgroundColor: ThemeColors.backgroundPrimary,
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 32, 30, 32),
-          child: Column(
-            children: [
-              const Header(),
-              const SizedBox(
-                height: 15,
+    return FutureBuilder(
+      future: homeScreenController.getData(),
+      builder: (context, snapshot) {
+        return GetBuilder(
+          init: homeScreenController,
+          builder: (controller) => Scaffold(
+            backgroundColor: ThemeColors.backgroundPrimary,
+            body: Padding(
+              padding: const EdgeInsets.fromLTRB(30, 32, 30, 32),
+              child: Column(
+                children: [
+                  const Header(),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Divider(
+                    height: 1,
+                    color: ThemeColors.dividerColor,
+                  ),
+                  const SizedBox(
+                    height: 18,
+                  ),
+                  Expanded(
+                    child: CustomizableTable(
+                      fieldsDecoration: BoxDecoration(
+                          color: ThemeColors.backgroundSecondary,
+                          borderRadius: BorderRadius.circular(8)),
+                      rowsDecoration: BoxDecoration(
+                          color: ThemeColors.backgroundSecondary,
+                          borderRadius: BorderRadius.circular(8)),
+                      fieldsTextStyle: TextStyles.mainText
+                          .copyWith(color: ThemeColors.textColorPrimary),
+                      fields: Dictionary.fields,
+                      fieldsMargin: 10,
+                      rowsData: homeScreenController.getRows(),
+                      rowDataTextStyle: TextStyles.mainText
+                          .copyWith(color: ThemeColors.textColorPrimary),
+                    ),
+                  ),
+                ],
               ),
-              const Divider(
-                height: 1,
-                color: ThemeColors.dividerColor,
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-              Expanded(
-                child: CustomizableTable(
-                  fieldsDecoration: BoxDecoration(
-                      color: ThemeColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(8)),
-                  rowsDecoration: BoxDecoration(
-                      color: ThemeColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(8)),
-                  fieldsTextStyle: TextStyles.mainText
-                      .copyWith(color: ThemeColors.textColorPrimary),
-                  fields: Dictionary.fields,
-                  fieldsMargin: 10,
-                  rowsData: homeScreenController.getRows(),
-                  rowDataTextStyle: TextStyles.mainText
-                      .copyWith(color: ThemeColors.textColorPrimary),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -125,7 +130,8 @@ class Header extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () {
-                Get.to(()=> const AddUpdateData(),routeName: '/AddUpdateData');
+                Get.to(() => const AddUpdateData(),
+                    routeName: '/AddUpdateData');
               },
               child: IntrinsicWidth(
                 child: Container(
