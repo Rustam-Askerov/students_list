@@ -1,28 +1,24 @@
 class StudentModel {
-  final String fio;
-  final num studPassportNum;
-  final String department;
-  final num yearOfEntering;
-  final num yearOfEnding;
-  final String degree;
-  final bool archiveIndicator;
-  final String vkrName;
-  final String vkrMark;
-  final String faculty;
-  final String departmentName;
-  final String departmentHead;
+  final int id;
+  final String fullName;
+  final String groupName;
+  final int studentIDnumber;
+  final int? departmentID;
+  final int? scientificSupervisorID;
+  final String stage;
+  final int dateOfAdmission;
+  final int? dateOfGraduation;
+  final bool? isGraduate;
 
   StudentModel(
-      this.fio,
-      this.studPassportNum,
-      this.department,
-      this.yearOfEntering,
-      this.yearOfEnding,
-      this.archiveIndicator,
-      this.degree,
-      this.vkrName,
-      this.vkrMark,
-      this.faculty,
-      this.departmentName,
-      this.departmentHead);
+      {required this.id,
+      required this.fullName,
+      required this.groupName,
+      required this.studentIDnumber,
+      this.departmentID,
+      this.scientificSupervisorID,
+      required this.stage,
+      required this.dateOfAdmission,
+      required this.dateOfGraduation,
+      required this.isGraduate});
 }

@@ -26,7 +26,6 @@ class CustomizableTable extends StatefulWidget {
   final List<List<String>> rowsData;
   final double fieldsMargin;
   final double rowsMargin;
-
   @override
   State<CustomizableTable> createState() => _CustomizableTableState();
 }
@@ -103,9 +102,12 @@ class _CustomizableTableState extends State<CustomizableTable> {
                         rowsMargin: widget.rowsMargin,
                         fieldsMargin: widget.fieldsMargin),
                     ...List.generate(
-                      widget.rowsData.length-(_tableController.currentPage.value-1)*8,
+                      widget.rowsData.length -
+                          (_tableController.currentPage.value - 1) * 8,
                       (index) => TableRow(
-                        rowData: widget.rowsData[(_tableController.currentPage.value-1)*8+index],
+                        rowData: widget.rowsData[
+                            (_tableController.currentPage.value - 1) * 8 +
+                                index],
                         rowsDecoration: widget.rowsDecoration,
                         rowDataTextStyle: widget.rowDataTextStyle,
                         filedsMargin: widget.fieldsMargin,
@@ -139,7 +141,7 @@ class Fields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      //height: 50,
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       margin: EdgeInsets.only(bottom: rowsMargin / 2),
       decoration: fieldsDecoration,
@@ -165,38 +167,42 @@ class Fields extends StatelessWidget {
                   const SizedBox(
                     width: 5,
                   ),
-                  MouseRegion(
-                    onEnter: (event) {
-                      _tableController.onHover.value = true;
-                      _tableController.onHoverIndex.value = index;
-                    },
-                    onExit: (event) {
-                      _tableController.onHover.value = false;
-                    },
-                    child: GestureDetector(
-                      onHorizontalDragUpdate: (details) {
-                        details.localPosition
-                            .scale(150, details.localPosition.dy);
-                        if (details.localPosition.dx > 150) {
-                          _tableController.updateColumnWidth(
-                              details.localPosition.dx, index);
-                        } else {
-                          _tableController.updateColumnWidth(150, index);
-                        }
-                      },
-                      child: Obx(
-                        () => AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 7,
-                          height: 20,
-                          color: _tableController.onHover.value &&
-                                  _tableController.onHoverIndex.value == index
-                              ? ThemeColors.searchIconColor
-                              : Colors.transparent,
-                        ),
-                      ),
-                    ),
-                  ),
+                  index != 0
+                      ? MouseRegion(
+                          onEnter: (event) {
+                            _tableController.onHover.value = true;
+                            _tableController.onHoverIndex.value = index;
+                          },
+                          onExit: (event) {
+                            _tableController.onHover.value = false;
+                          },
+                          child: GestureDetector(
+                            onHorizontalDragUpdate: (details) {
+                              // details.localPosition.scale(
+                              //     _tableController.columnWidth[index],
+                              //     details.localPosition.dy);
+                              if (details.localPosition.dx > 150) {
+                                _tableController.updateColumnWidth(
+                                    details.localPosition.dx, index);
+                              } else {
+                                _tableController.updateColumnWidth(150, index);
+                              }
+                            },
+                            child: Obx(
+                              () => AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: 7,
+                                height: 20,
+                                color: _tableController.onHover.value &&
+                                        _tableController.onHoverIndex.value ==
+                                            index
+                                    ? ThemeColors.searchIconColor
+                                    : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -233,29 +239,72 @@ class TableRow extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: rowsMargin / 2),
         decoration: rowsDecoration,
         child: InkWell(
-          onTap: (){
-            print('clicked');
+          onTap: () {
+            //print('clicked');
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...List.generate(
                 rowData.length,
-                (index) => Container(
-                  width: _tableController.columnWidth[index],
-                  alignment: Alignment.centerLeft,
-                  margin: EdgeInsets.only(
-                      left: index == 0 ? 0 : filedsMargin,
-                      right: index == rowData.length - 1 ? 0 : filedsMargin),
-                  child: SelectionArea(
-                    child: Text(
-                      rowData[index],
-                      maxLines: 1,
-                      style: rowDataTextStyle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
+                (index) => index == 0
+                    ? Container(
+                        width: _tableController.columnWidth[index],
+                        margin: EdgeInsets.only(
+                            left: index == 0 ? 0 : filedsMargin,
+                            right:
+                                index == rowData.length - 1 ? 0 : filedsMargin),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/icons/edit.png',
+                                height: 20,
+                                width: 20,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/icons/eye.png',
+                                height: 20,
+                                width: 20,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            InkWell(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/icons/trash.png',
+                                height: 20,
+                                width: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        width: _tableController.columnWidth[index],
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(
+                            left: index == 0 ? 0 : filedsMargin,
+                            right:
+                                index == rowData.length - 1 ? 0 : filedsMargin),
+                        child: SelectionArea(
+                          child: Text(
+                            rowData[index],
+                            maxLines: 1,
+                            style: rowDataTextStyle,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
               )
             ],
           ),

@@ -5,20 +5,19 @@ class Dictionary {
     'Действия',
     'ФИО',
     '№ студенческого',
+    'Группа',
     'Кафедра',
-    'Год поступления',
     'Ступень образования',
-    'Индикация окончания',
-    'Название диплома',
-    'Оценка за диплом',
-    'Факультет',
-    'Наименование',
-    'ФИО зав.каф.'
+    'Год поступления',
+    'Год окончания обучения',
+    'Индикация окончания'
   ];
   //экран добавления/редактирования записи
   static const String studentsInfo= 'Информация о студенте';
   static const String departmentInfo= 'Информация о кафедре';
+  static const String scientificAdvisorInfo = 'Информация о научном руководителе';
   static const String fio = 'ФИО';
+  static const String group = 'Группа';
   static const String studNum = '№ студенческого';
   static const String yearOfEntering = 'Год поступления';
   static const String yearOfEnding = 'Год окончания обучения';
@@ -38,4 +37,7 @@ class Dictionary {
   static const String greate = 'Отлично';
   static const String mathFaculty = 'Математический';
   static const String ivtFaculty = 'ИВТ';
+  static const String scientificSupervisorFIO = 'ФИО';
+  static const String post = 'Должность';
+  static const String academicDegree = 'Ученая степень';
 }

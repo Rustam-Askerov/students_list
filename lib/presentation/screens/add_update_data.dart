@@ -32,7 +32,17 @@ class AddUpdateData extends StatelessWidget {
                           SizedBox(
                             width: 25,
                           ),
-                          Flexible(child: DepartmentInfo()),
+                          Flexible(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DepartmentInfo(),
+                              SizedBox(
+                                height: 25,
+                              ),
+                              ScientificAdvisor(),
+                            ],
+                          )),
                         ],
                       ),
                     ),
@@ -52,7 +62,7 @@ class AddUpdateData extends StatelessWidget {
                             ThemeColors.backgroundSecondary),
                       ),
                       onPressed: () {
-                        _addUpdateController.addRow();
+                        //_addUpdateController.addRow();
                       },
                       child: SizedBox(
                         height: 50,
@@ -98,8 +108,13 @@ class StudentInfo extends StatelessWidget {
               height: 10,
             ),
             CustomEnterField(
-              textEditingController: _addUpdateController.fioController,
+              textEditingController: _addUpdateController.fio,
               labelText: Dictionary.fio,
+              padding: const EdgeInsets.only(bottom: 16),
+            ),
+            CustomEnterField(
+              textEditingController: _addUpdateController.group,
+              labelText: Dictionary.group,
               padding: const EdgeInsets.only(bottom: 16),
             ),
             CustomEnterField(
@@ -108,7 +123,47 @@ class StudentInfo extends StatelessWidget {
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
+              padding: const EdgeInsets.only(bottom: 4),
+            ),
+            Padding(
               padding: const EdgeInsets.only(bottom: 16),
+              child: DropdownButton<String>(
+                dropdownColor: ThemeColors.backgroundSecondary,
+                focusColor: ThemeColors.backgroundSecondary,
+                hint: Text(
+                  Dictionary.degree,
+                  style: TextStyles.hintText
+                      .copyWith(color: ThemeColors.hintTextColor, fontSize: 14),
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: Dictionary.bachelor,
+                    child: Text(
+                      Dictionary.bachelor,
+                      style: TextStyles.mainText,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: Dictionary.specialist,
+                    child: Text(
+                      Dictionary.specialist,
+                      style: TextStyles.mainText,
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: Dictionary.master,
+                    child: Text(
+                      Dictionary.master,
+                      style: TextStyles.mainText,
+                    ),
+                  ),
+                ],
+                value: _addUpdateController.degree,
+                onChanged: (String? value) {
+                  _addUpdateController.degree = value;
+                  _addUpdateController.update();
+                },
+              ),
             ),
             Row(
               children: [
@@ -168,98 +223,58 @@ class StudentInfo extends StatelessWidget {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: DropdownButton<String>(
-                dropdownColor: ThemeColors.backgroundSecondary,
-                focusColor: ThemeColors.backgroundSecondary,
-                hint: Text(
-                  Dictionary.degree,
-                  style: TextStyles.hintText
-                      .copyWith(color: ThemeColors.hintTextColor, fontSize: 14),
-                ),
-                items: const [
-                  DropdownMenuItem(
-                    value: Dictionary.bachelor,
-                    child: Text(
-                      Dictionary.bachelor,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: Dictionary.specialist,
-                    child: Text(
-                      Dictionary.specialist,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: Dictionary.master,
-                    child: Text(
-                      Dictionary.master,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                ],
-                value: _addUpdateController.degree,
-                onChanged: (String? value) {
-                  _addUpdateController.degree = value;
-                  _addUpdateController.update();
-                },
-              ),
-            ),
-            CustomEnterField(
-              textEditingController: _addUpdateController.vkrName,
-              labelText: Dictionary.vkrName,
-              padding: const EdgeInsets.only(bottom: 4),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: DropdownButton<String>(
-                dropdownColor: ThemeColors.backgroundSecondary,
-                focusColor: ThemeColors.backgroundSecondary,
-                hint: Text(
-                  Dictionary.vkrMark,
-                  style: TextStyles.hintText
-                      .copyWith(color: ThemeColors.hintTextColor, fontSize: 14),
-                ),
-                items: const [
-                  DropdownMenuItem(
-                    value: Dictionary.dontExists,
-                    child: Text(
-                      Dictionary.dontExists,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: Dictionary.greate,
-                    child: Text(
-                      Dictionary.greate,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: Dictionary.good,
-                    child: Text(
-                      Dictionary.good,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                  DropdownMenuItem(
-                    value: Dictionary.satisfactorily,
-                    child: Text(
-                      Dictionary.satisfactorily,
-                      style: TextStyles.mainText,
-                    ),
-                  ),
-                ],
-                value: _addUpdateController.vkrMark,
-                onChanged: (String? value) {
-                  _addUpdateController.vkrMark = value!;
-                  _addUpdateController.update();
-                },
-              ),
-            ),
+            // CustomEnterField(
+            //   textEditingController: _addUpdateController.vkrName,
+            //   labelText: Dictionary.vkrName,
+            //   padding: const EdgeInsets.only(bottom: 4),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.only(bottom: 16),
+            //   child: DropdownButton<String>(
+            //     dropdownColor: ThemeColors.backgroundSecondary,
+            //     focusColor: ThemeColors.backgroundSecondary,
+            //     hint: Text(
+            //       Dictionary.vkrMark,
+            //       style: TextStyles.hintText
+            //           .copyWith(color: ThemeColors.hintTextColor, fontSize: 14),
+            //     ),
+            //     items: const [
+            //       DropdownMenuItem(
+            //         value: Dictionary.dontExists,
+            //         child: Text(
+            //           Dictionary.dontExists,
+            //           style: TextStyles.mainText,
+            //         ),
+            //       ),
+            //       DropdownMenuItem(
+            //         value: Dictionary.greate,
+            //         child: Text(
+            //           Dictionary.greate,
+            //           style: TextStyles.mainText,
+            //         ),
+            //       ),
+            //       DropdownMenuItem(
+            //         value: Dictionary.good,
+            //         child: Text(
+            //           Dictionary.good,
+            //           style: TextStyles.mainText,
+            //         ),
+            //       ),
+            //       DropdownMenuItem(
+            //         value: Dictionary.satisfactorily,
+            //         child: Text(
+            //           Dictionary.satisfactorily,
+            //           style: TextStyles.mainText,
+            //         ),
+            //       ),
+            //     ],
+            //     value: _addUpdateController.vkrMark,
+            //     onChanged: (String? value) {
+            //       _addUpdateController.vkrMark = value!;
+            //       _addUpdateController.update();
+            //     },
+            //   ),
+            // ),
           ],
         );
       },
@@ -385,6 +400,47 @@ class CustomEnterField extends StatelessWidget {
           onEditingComplete: onEditingComplete,
         ),
       ),
+    );
+  }
+}
+
+class ScientificAdvisor extends StatelessWidget {
+  const ScientificAdvisor({super.key});
+  static final _addUpdateController = Get.find<AddUpdateController>();
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AddUpdateController>(
+      init: _addUpdateController,
+      builder: (controller) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Dictionary.scientificAdvisorInfo,
+              style: TextStyles.header
+                  .copyWith(color: ThemeColors.textColorPrimary),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomEnterField(
+              textEditingController: _addUpdateController.scientificSupervisorFIO,
+              labelText: Dictionary.fio,
+              padding: const EdgeInsets.only(bottom: 16),
+            ),
+            CustomEnterField(
+              textEditingController: _addUpdateController.post,
+              labelText: Dictionary.post,
+              padding: const EdgeInsets.only(bottom: 16),
+            ),
+            CustomEnterField(
+              textEditingController: _addUpdateController.academicDegree,
+              labelText: Dictionary.academicDegree,
+              padding: const EdgeInsets.only(bottom: 16),
+            ),
+          ],
+        );
+      },
     );
   }
 }

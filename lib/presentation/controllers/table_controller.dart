@@ -10,6 +10,7 @@ class CustomizableTableController extends GetxController {
 
   void columnWidthInit(int num) {
     columnWidth = List<double>.filled(num, 150);
+    columnWidth[0]=80;
   }
 
   void updateColumnWidth(double newWidth, int index) {
