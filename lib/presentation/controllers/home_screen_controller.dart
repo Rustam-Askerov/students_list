@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/datasources/students_list_remote_datasource.dart';
 import 'package:students_list/data/models/student_model.dart';
@@ -11,6 +12,19 @@ class HomeScreenController extends GetxController {
   List<StudentModel> models = [];
   List<StudentModel> data = [];
   List<List<String>> rows = [];
+  final TextEditingController searchController =
+      TextEditingController(text: '');
+
+  void search() {
+    data = models
+        .where((element) =>
+            element.fullName.contains(searchController.text) ||
+            element.stage.contains(searchController.text) ||
+            element.studentIDnumber.toString().contains(searchController.text))
+        .toList();
+    rows = getRows().reversed.toList();
+    update();
+  }
 
   Future<List<StudentModel>> getData() async {
     models = await _studentsListRepositoryImpl.getStudents();
@@ -31,16 +45,16 @@ class HomeScreenController extends GetxController {
 
   List<List<String>> getRows() {
     return List.generate(
-      models.length,
+      data.length,
       (index) => [
         '',
-        models[index].fullName,
-        models[index].studentIDnumber.toString(),
-        models[index].groupName,
-        models[index].stage,
-        models[index].dateOfAdmission.toString(),
-        (models[index].dateOfGraduation ?? '').toString(),
-        models[index].isGraduate != null
+        data[index].fullName,
+        data[index].studentIDnumber.toString(),
+        data[index].groupName,
+        data[index].stage,
+        data[index].dateOfAdmission.toString(),
+        (data[index].dateOfGraduation ?? '').toString(),
+        data[index].isGraduate != null
             ? models[index].isGraduate!
                 ? 'Окончено'
                 : 'Не окончено'

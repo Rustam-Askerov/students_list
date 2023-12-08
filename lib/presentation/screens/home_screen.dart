@@ -108,16 +108,34 @@ class Header extends StatelessWidget {
                 child: TextFormField(
                   autofocus: false,
                   enableInteractiveSelection: false,
+                  controller: homeScreenController.searchController,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(top: 2, left: 22),
                     hintText: 'Поиск',
                     hintStyle: TextStyles.hintText
                         .copyWith(color: ThemeColors.hintTextColor),
-                    suffixIcon: const Padding(
-                      padding: EdgeInsets.only(right: 11),
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.only(left: 5),
                       child: Icon(
                         Icons.search,
                         color: ThemeColors.searchIconColor,
+                      ),
+                    ),
+                    suffixIcon: Visibility(
+                      visible: homeScreenController.searchController.text != '',
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () {
+                          homeScreenController.searchController.clear();
+                          homeScreenController.search();
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 11),
+                          child: Icon(
+                            Icons.close,
+                            color: ThemeColors.searchIconColor,
+                          ),
+                        ),
                       ),
                     ),
                     filled: true,
@@ -135,29 +153,41 @@ class Header extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+                  onChanged: (String value) {
+                    homeScreenController.search();
+                  },
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 90),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () {
-                Get.to(
-                    () => const AddUpdateData(
-                          addUpdate: true,
-                        ),
-                    routeName: '/AddUpdateData');
-              },
-              child: IntrinsicWidth(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      left: 30, top: 4, bottom: 6, right: 10),
-                  decoration: BoxDecoration(
-                    color: ThemeColors.backgroundSecondary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+          ElevatedButton(
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              backgroundColor: const MaterialStatePropertyAll(
+                  ThemeColors.backgroundSecondary),
+              overlayColor:
+                  const MaterialStatePropertyAll(ThemeColors.backgroundPrimary),
+              surfaceTintColor: const MaterialStatePropertyAll(
+                  ThemeColors.backgroundSecondary),
+            ),
+            onPressed: () {
+              Get.to(
+                  () => const AddUpdateData(
+                        addUpdate: true,
+                      ),
+                  routeName: '/AddUpdateData');
+            },
+            child: IntrinsicWidth(
+              child: Container(
+                padding: const EdgeInsets.only(left: 6, top: 4, bottom: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
                   child: Row(
                     children: [
                       Text(
@@ -165,9 +195,7 @@ class Header extends StatelessWidget {
                         style: TextStyles.mainText
                             .copyWith(color: ThemeColors.addIcon),
                       ),
-                      const SizedBox(
-                        width: 38,
-                      ),
+                      const SizedBox(width: 25,),
                       Image.asset(
                         'assets/icons/add.png',
                         height: 25,
@@ -178,7 +206,7 @@ class Header extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
