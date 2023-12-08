@@ -16,9 +16,18 @@ class HomeScreen extends StatelessWidget {
     return FutureBuilder(
       future: homeScreenController.getData(),
       builder: (context, snapshot) {
-        return GetBuilder(
-          init: homeScreenController,
-          builder: (controller) => Scaffold(
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: SizedBox(
+              width: 100,
+              height: 20,
+              child: LinearProgressIndicator(
+                color: ThemeColors.textColorPrimary,
+              ),
+            ),
+          );
+        } else {
+          return Scaffold(
             backgroundColor: ThemeColors.backgroundPrimary,
             body: Padding(
               padding: const EdgeInsets.fromLTRB(30, 32, 30, 32),
@@ -36,27 +45,32 @@ class HomeScreen extends StatelessWidget {
                     height: 18,
                   ),
                   Expanded(
-                    child: CustomizableTable(
-                      fieldsDecoration: BoxDecoration(
-                          color: ThemeColors.backgroundSecondary,
-                          borderRadius: BorderRadius.circular(8)),
-                      rowsDecoration: BoxDecoration(
-                          color: ThemeColors.backgroundSecondary,
-                          borderRadius: BorderRadius.circular(8)),
-                      fieldsTextStyle: TextStyles.mainText
-                          .copyWith(color: ThemeColors.textColorPrimary),
-                      fields: Dictionary.fields,
-                      fieldsMargin: 10,
-                      rowsData: homeScreenController.getRows(),
-                      rowDataTextStyle: TextStyles.mainText
-                          .copyWith(color: ThemeColors.textColorPrimary),
+                    child: GetBuilder(
+                      init: homeScreenController,
+                      builder: (controller) => CustomizableTable(
+                        fieldsDecoration: BoxDecoration(
+                            color: ThemeColors.backgroundSecondary,
+                            borderRadius: BorderRadius.circular(8)),
+                        rowsDecoration: BoxDecoration(
+                            color: ThemeColors.backgroundSecondary,
+                            borderRadius: BorderRadius.circular(8)),
+                        fieldsTextStyle: TextStyles.mainText
+                            .copyWith(color: ThemeColors.textColorPrimary),
+                        fields: Dictionary.fields,
+                        fieldsMargin: 10,
+                        rowsData: controller.rows,
+                        data: homeScreenController.data,
+                        rowDataTextStyle: TextStyles.mainText
+                            .copyWith(color: ThemeColors.textColorPrimary),
+                        deleteRow: controller.deleteStudent,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        );
+          );
+        }
       },
     );
   }
@@ -130,7 +144,10 @@ class Header extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () {
-                Get.to(() => const AddUpdateData(),
+                Get.to(
+                    () => const AddUpdateData(
+                          addUpdate: true,
+                        ),
                     routeName: '/AddUpdateData');
               },
               child: IntrinsicWidth(

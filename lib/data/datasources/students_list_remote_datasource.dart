@@ -7,7 +7,7 @@ import 'package:students_list/utils/connection_mode.dart';
 abstract class StudentsListDataSource {
   Future<List<StudentModel>> getStudents();
   Future<List<StudentModel>> getStudentByID(int id);
-  Future<void> createStudent(
+  Future<StudentModel> createStudent(
     String fullName,
     String groupName,
     int studentIDnumber,
@@ -19,7 +19,7 @@ abstract class StudentsListDataSource {
     bool? isGraduate,
   );
 
-  Future<void> editStudent(
+  Future<StudentModel> editStudent(
     int id,
     String fullName,
     String groupName,
@@ -37,7 +37,7 @@ abstract class StudentsListDataSource {
 
 class StudentsListRemoteDataSource extends StudentsListDataSource {
   @override
-  Future<void> createStudent(
+  Future<StudentModel> createStudent(
       String fullName,
       String groupName,
       int studentIDnumber,
@@ -47,10 +47,11 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
       int dateOfAdmission,
       int? dateOfGraduation,
       bool? isGraduate) async {
-    final uri = Uri.http(ConnectionMode.getConnectionUrl(), '/api/create_new_student');
+    final uri =
+        Uri.http(ConnectionMode.getConnectionUrl(), '/api/create_new_student');
     final response = await http.post(
       uri,
-      headers: ConnectionMode.getHeaders(),
+      headers: ConnectionMode().getHeaders(),
       body: json.encode({
         'full_name': fullName,
         'group_name': groupName,
@@ -58,18 +59,23 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
         'fk_department_id': departmentID,
         'fk_scientific_supervisor_id': scientificSupervisorID,
         'stage': stage,
-        'date_of_admission': '$dateOfAdmission-17-08',
-        'date_of_graduate': '$dateOfGraduation-17-08',
+        'date_of_admission': '$dateOfAdmission-01-08',
+        'date_of_graduate': dateOfGraduation != null
+            ? '$dateOfGraduation-01-08'
+            : dateOfGraduation,
         'is_graduate': isGraduate
       }),
     );
     if (response.statusCode == 200) {
-      log(response.body);
+      final student = json.decode(response.body);
+      return StudentModel.fromJson(student);
+    } else {
+      throw Exception(response.statusCode);
     }
   }
 
   @override
-  Future<void> editStudent(
+  Future<StudentModel> editStudent(
       int id,
       String fullName,
       String groupName,
@@ -84,7 +90,7 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
         Uri.http(ConnectionMode.getConnectionUrl(), '/api/update_student/$id');
     final response = await http.put(
       uri,
-      headers: ConnectionMode.getHeaders(),
+      headers: ConnectionMode().getHeaders(),
       body: json.encode({
         'id': id,
         'full_name': fullName,
@@ -93,13 +99,18 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
         'fk_department_id': departmentID,
         'fk_scientific_supervisor_id': scientificSupervisorID,
         'stage': stage,
-        'date_of_admission': '$dateOfAdmission-17-08',
-        'date_of_graduate': '$dateOfGraduation-17-08',
+        'date_of_admission': '$dateOfAdmission-01-08',
+        'date_of_graduate': dateOfGraduation != null
+            ? '$dateOfGraduation-01-08'
+            : dateOfGraduation,
         'is_graduate': isGraduate
       }),
     );
     if (response.statusCode == 200) {
-      log(response.body);
+      final student = json.decode(response.body);
+      return StudentModel.fromJson(student);
+    } else {
+      throw Exception(response.statusCode);
     }
   }
 
@@ -109,7 +120,7 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
         Uri.http(ConnectionMode.getConnectionUrl(), '/api/delete_students/$id');
     final response = await http.delete(
       uri,
-      headers: ConnectionMode.getHeaders(),
+      headers: ConnectionMode().getHeaders(),
     );
     if (response.statusCode == 200) {
       log(response.body);
@@ -128,18 +139,20 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
   }
 
   Future<List<StudentModel>> _getDataFromUrl(String url) async {
-    final uri = Uri.http(ConnectionMode.getConnectionUrl(), url);
+    final uri = Uri.http(
+      ConnectionMode.getConnectionUrl(),
+      url,
+    );
     final response = await http.get(
       uri,
     );
     if (response.statusCode == 200) {
-      print('success');
-      final events = json.decode(response.body);
-      return (events as List)
-          .map((news) => StudentModel.fromJson(news))
+      final students = json.decode(response.body);
+      return (students as List)
+          .map((students) => StudentModel.fromJson(students))
           .toList();
     } else {
-      throw Exception('Non valid data');
+      return [];
     }
   }
 }

@@ -8,7 +8,7 @@ class StudentsListRepositoryImpl implements StudentsListRepository {
   StudentsListRepositoryImpl({required this.studentsListDataSource});
 
   @override
-  Future<void> createStudent(
+  Future<StudentModel> createStudent(
       String fullName,
       String groupName,
       int studentIDnumber,

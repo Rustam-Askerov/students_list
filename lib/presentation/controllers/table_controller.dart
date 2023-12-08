@@ -18,7 +18,14 @@ class CustomizableTableController extends GetxController {
     update();
   }
 
-  void updateCurrentPage(bool next, int pageCount) {
+  void updatePageIndex(int index,int pageCount){
+    if (currentPage>0 && currentPage<=pageCount){
+      currentPage.value = index;
+    }
+    update();
+  }
+  
+  void nextPreviousPage(bool next, int pageCount) {
     if (next) {
       if (currentPage.value < pageCount) {
         currentPage.value++;
