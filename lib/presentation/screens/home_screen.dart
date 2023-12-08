@@ -49,13 +49,32 @@ class HomeScreen extends StatelessWidget {
                       init: homeScreenController,
                       builder: (controller) => CustomizableTable(
                         fieldsDecoration: BoxDecoration(
-                            color: ThemeColors.backgroundSecondary,
-                            borderRadius: BorderRadius.circular(8)),
+                          color: ThemeColors.backgroundSecondary,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeColors.hintTextColor.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(5, 5),
+                            ),
+                          ],
+                        ),
                         rowsDecoration: BoxDecoration(
-                            color: ThemeColors.backgroundSecondary,
-                            borderRadius: BorderRadius.circular(8)),
-                        fieldsTextStyle: TextStyles.mainText
-                            .copyWith(color: ThemeColors.textColorPrimary),
+                          color: ThemeColors.backgroundSecondary,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: ThemeColors.hintTextColor.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 7,
+                              offset: const Offset(5, 5),
+                            ),
+                          ],
+                        ),
+                        fieldsTextStyle: TextStyles.mainText.copyWith(
+                            color: ThemeColors.textColorPrimary,
+                            fontWeight: FontWeight.w600),
                         fields: Dictionary.fields,
                         fieldsMargin: 10,
                         rowsData: controller.rows,
@@ -103,7 +122,18 @@ class Header extends StatelessWidget {
             padding: const EdgeInsets.only(),
             child: IntrinsicWidth(
               stepWidth: 500,
-              child: SizedBox(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ThemeColors.hintTextColor.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 7,
+                      offset: const Offset(5, 5),
+                    ),
+                  ],
+                ),
                 height: 35,
                 child: TextFormField(
                   autofocus: false,
@@ -162,8 +192,21 @@ class Header extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(right: 90),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: ThemeColors.hintTextColor.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(5, 5),
+                ),
+              ],
+            ),
             child: ElevatedButton(
               style: ButtonStyle(
+                shadowColor: const MaterialStatePropertyAll(
+                    Colors.transparent),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -171,8 +214,8 @@ class Header extends StatelessWidget {
                 ),
                 backgroundColor: const MaterialStatePropertyAll(
                     ThemeColors.backgroundSecondary),
-                overlayColor:
-                    const MaterialStatePropertyAll(ThemeColors.backgroundPrimary),
+                overlayColor: const MaterialStatePropertyAll(
+                    ThemeColors.backgroundPrimary),
                 surfaceTintColor: const MaterialStatePropertyAll(
                     ThemeColors.backgroundSecondary),
               ),
@@ -197,7 +240,9 @@ class Header extends StatelessWidget {
                           style: TextStyles.mainText
                               .copyWith(color: ThemeColors.addIcon),
                         ),
-                        const SizedBox(width: 25,),
+                        const SizedBox(
+                          width: 25,
+                        ),
                         Image.asset(
                           'assets/icons/add.png',
                           height: 25,

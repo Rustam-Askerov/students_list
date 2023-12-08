@@ -18,9 +18,9 @@ class HomeScreenController extends GetxController {
   void search() {
     data = models
         .where((element) =>
-            element.fullName.contains(searchController.text) ||
-            element.stage.contains(searchController.text) ||
-            element.studentIDnumber.toString().contains(searchController.text))
+            element.fullName.toLowerCase().contains(searchController.text.toLowerCase()) ||
+            element.stage.toLowerCase().contains(searchController.text.toLowerCase()) ||
+            element.studentIDnumber.toString().toLowerCase().contains(searchController.text.toLowerCase()))
         .toList();
     rows = getRows().reversed.toList();
     update();
@@ -28,8 +28,12 @@ class HomeScreenController extends GetxController {
 
   Future<List<StudentModel>> getData() async {
     models = await _studentsListRepositoryImpl.getStudents();
-    data = models;
-    rows = getRows().reversed.toList();
+    if (searchController.text != '') {
+      search();
+    } else {
+      data = models;
+      rows = getRows().reversed.toList();
+    }
     update();
     return models;
   }

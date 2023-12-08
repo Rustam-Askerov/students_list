@@ -62,7 +62,8 @@ class _AddUpdateDataState extends State<AddUpdateData> {
                                 ),
                                 Flexible(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       DepartmentInfo(),
                                       ScientificSupervisor(),
@@ -93,9 +94,12 @@ class _AddUpdateDataState extends State<AddUpdateData> {
                             ),
                             onPressed: () async {
                               widget.addUpdate
-                                  ? await _addUpdateController.addStudent().then((value) => Get.back())
+                                  ? await _addUpdateController
+                                      .addStudent()
+                                      .then((value) => Get.back())
                                   : await _addUpdateController
-                                      .updateStudent(widget.student!).then((value) => Get.back());
+                                      .updateStudent(widget.student!)
+                                      .then((value) => Get.back());
                             },
                             child: SizedBox(
                               height: 50,
@@ -136,15 +140,17 @@ class StudentInfo extends StatelessWidget {
           padding: const EdgeInsets.all(16).copyWith(bottom: 78),
           margin: const EdgeInsets.only(top: 30),
           decoration: BoxDecoration(
-              color: ThemeColors.backgroundPrimary,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ThemeColors.backgroundSecondary),
-              boxShadow: const [
-                BoxShadow(
-                    color: ThemeColors.backgroundSecondary,
-                    spreadRadius: 3,
-                    blurRadius: 5)
-              ]),
+            color: ThemeColors.backgroundPrimary,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: ThemeColors.backgroundSecondary),
+            boxShadow: const [
+              BoxShadow(
+                  color: ThemeColors.backgroundSecondary,
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: Offset(5, 5))
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -412,15 +418,17 @@ class ScientificWork extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: ThemeColors.backgroundPrimary,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ThemeColors.backgroundSecondary),
-              boxShadow: const [
-                BoxShadow(
-                    color: ThemeColors.backgroundSecondary,
-                    spreadRadius: 3,
-                    blurRadius: 5)
-              ]),
+            color: ThemeColors.backgroundPrimary,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: ThemeColors.backgroundSecondary),
+            boxShadow: const [
+              BoxShadow(
+                  color: ThemeColors.backgroundSecondary,
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: Offset(5, 5))
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -642,18 +650,21 @@ class DepartmentInfo extends StatelessWidget {
       init: _addUpdateController,
       builder: (controller) {
         return Container(
-          margin: const EdgeInsets.only(bottom: 25,top: 30),
+          margin: const EdgeInsets.only(bottom: 25, top: 30),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: ThemeColors.backgroundPrimary,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: ThemeColors.backgroundSecondary),
-              boxShadow: const [
-                BoxShadow(
-                    color: ThemeColors.backgroundSecondary,
-                    spreadRadius: 3,
-                    blurRadius: 5)
-              ]),
+            color: ThemeColors.backgroundPrimary,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: ThemeColors.backgroundSecondary),
+            boxShadow: const [
+              BoxShadow(
+                color: ThemeColors.backgroundSecondary,
+                spreadRadius: 3,
+                blurRadius: 5,
+                offset: Offset(5, 5),
+              ),
+            ],
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -859,15 +870,18 @@ class ScientificSupervisor extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 25),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: ThemeColors.backgroundPrimary,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: ThemeColors.backgroundSecondary),
-                boxShadow: const [
-                  BoxShadow(
-                      color: ThemeColors.backgroundSecondary,
-                      spreadRadius: 3,
-                      blurRadius: 5)
-                ]),
+              color: ThemeColors.backgroundPrimary,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: ThemeColors.backgroundSecondary),
+              boxShadow: const [
+                BoxShadow(
+                  color: ThemeColors.backgroundSecondary,
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: Offset(5, 5),
+                )
+              ],
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -256,10 +256,16 @@ class AddUpdateController extends GetxController {
           if (currentWork != null) {
             if (workName.text == '') {
               await _worksRepositoryImpl.deleteWork(currentWork!.id);
+            } else {
+              //если научная работа есть то редактируем
+              await _worksRepositoryImpl.editWork(
+                  currentWork!.id,
+                  workName.text,
+                  student.id,
+                  workType!,
+                  assessment,
+                  workDueDateText.text);
             }
-            //если научная работа есть то редактируем
-            await _worksRepositoryImpl.editWork(currentWork!.id, workName.text,
-                student.id, workType!, assessment, workDueDateText.text);
           } else {
             //если научной работы нет то создаем
             if (workName.text != '' && workType != null) {

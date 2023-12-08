@@ -49,73 +49,88 @@ class _CustomizableTableState extends State<CustomizableTable> {
       initState: (state) {
         _tableController.columnWidthInit(widget.fields.length);
       },
-      builder: (controller) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Pagination(pages: (widget.rowsData.length / 8).ceil()),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: ScrollController(),
+      builder: (controller) => IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Pagination(
+                  pages: (widget.rowsData.length / 8).ceil(),
+                  boxDecoration: widget.fieldsDecoration,
+                ),
+                const SizedBox(
+                  width: 16,
+                ),
+              ],
+            ),
+            Expanded(
               child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.horizontal,
                 controller: ScrollController(),
-                child: Column(
-                  children: [
-                    Fields(
-                        fields: widget.fields,
-                        fieldsDecoration: widget.fieldsDecoration,
-                        fieldsTextStyle: widget.fieldsTextStyle,
-                        rowsMargin: widget.rowsMargin,
-                        fieldsMargin: widget.fieldsMargin),
-                    ...List.generate(
-                      widget.rowsData.isNotEmpty
-                          ? _tableController.currentPage.value !=
-                                  (widget.rowsData.length / 8).ceil()
-                              ? 8
-                              : widget.rowsData.length -
-                                  (_tableController.currentPage.value - 1) * 8
-                          : 0,
-                      (index) => TableRow(
-                        rowData: widget.rowsData[
-                            (_tableController.currentPage.value - 1) * 8 +
-                                index],
-                        rowsDecoration: widget.rowsDecoration,
-                        rowDataTextStyle: widget.rowDataTextStyle,
-                        filedsMargin: widget.fieldsMargin,
-                        rowsMargin: widget.rowsMargin,
-                        deleteRow: widget.deleteRow,
-                        rowIndex: (_tableController.currentPage.value - 1) * 8 +
-                            index,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  controller: ScrollController(),
+                  child: Column(
+                    children: [
+                      Fields(
+                          fields: widget.fields,
+                          fieldsDecoration: widget.fieldsDecoration,
+                          fieldsTextStyle: widget.fieldsTextStyle,
+                          rowsMargin: widget.rowsMargin,
+                          fieldsMargin: widget.fieldsMargin),
+                      ...List.generate(
+                        widget.rowsData.isNotEmpty
+                            ? _tableController.currentPage.value !=
+                                    (widget.rowsData.length / 8).ceil()
+                                ? 8
+                                : widget.rowsData.length -
+                                    (_tableController.currentPage.value - 1) * 8
+                            : 0,
+                        (index) => TableRow(
+                          rowData: widget.rowsData[
+                              (_tableController.currentPage.value - 1) * 8 +
+                                  index],
+                          rowsDecoration: widget.rowsDecoration,
+                          rowDataTextStyle: widget.rowDataTextStyle,
+                          filedsMargin: widget.fieldsMargin,
+                          rowsMargin: widget.rowsMargin,
+                          deleteRow: widget.deleteRow,
+                          rowIndex:
+                              (_tableController.currentPage.value - 1) * 8 +
+                                  index,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class Pagination extends StatelessWidget {
-  const Pagination({super.key, required this.pages});
+  const Pagination(
+      {super.key, required this.pages, required this.boxDecoration});
   final int pages;
+  final Decoration boxDecoration;
   @override
   Widget build(BuildContext context) {
     return IntrinsicWidth(
       child: Container(
         padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-            color: ThemeColors.backgroundSecondary,
-            borderRadius: BorderRadius.circular(8)),
+        decoration: boxDecoration,
         child: Row(
           children: [
             Text(
-              '${_tableController.currentPage} Страница из $pages ',
+              '${_tableController.currentPage} cтраница из $pages ',
               style: TextStyles.hintText.copyWith(
                 color: ThemeColors.textColorPrimary,
               ),
@@ -289,7 +304,8 @@ class TableRow extends StatelessWidget {
   final int rowIndex;
   final Future<void> Function(int id) deleteRow;
 
-  static final AddUpdateController _addUpdateController = Get.find<AddUpdateController>();
+  static final AddUpdateController _addUpdateController =
+      Get.find<AddUpdateController>();
   static final HomeScreenController _homeScreenController =
       Get.find<HomeScreenController>();
   @override
@@ -319,6 +335,7 @@ class TableRow extends StatelessWidget {
                             right:
                                 index == rowData.length - 1 ? 0 : filedsMargin),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             InkWell(
                               onTap: () {
@@ -330,31 +347,22 @@ class TableRow extends StatelessWidget {
                                         .isGraduate ==
                                     null) {
                                   Get.to(
-                                      () => AddUpdateData(
-                                            addUpdate: false,
-                                            studentIndex: rowIndex,
-                                            student: _homeScreenController.data[
-                                                _homeScreenController
+                                          () => AddUpdateData(
+                                                addUpdate: false,
+                                                studentIndex: rowIndex,
+                                                student: _homeScreenController
+                                                    .data[_homeScreenController
                                                         .data.length -
                                                     rowIndex -
                                                     1],
-                                          ),
-                                      routeName: '/AddUpdateData')!.then((value) => _addUpdateController.clearFields());
+                                              ),
+                                          routeName: '/AddUpdateData')!
+                                      .then((value) =>
+                                          _addUpdateController.clearFields());
                                 }
                               },
                               child: Image.asset(
                                 'assets/icons/edit.png',
-                                height: 20,
-                                width: 20,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            InkWell(
-                              onTap: () {},
-                              child: Image.asset(
-                                'assets/icons/eye.png',
                                 height: 20,
                                 width: 20,
                               ),
