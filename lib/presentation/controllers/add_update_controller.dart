@@ -189,7 +189,7 @@ class AddUpdateController extends GetxController {
   }
 
   //редактирование информации о студенте
-  void updateStudent(StudentModel student) async {
+  Future<void> updateStudent(StudentModel student) async {
     ScientificSupervisorModel? supervisorModel;
     if (departmentName != null && departmentName != Dictionary.nonChose) {
       if (currentSupervisor == null) {

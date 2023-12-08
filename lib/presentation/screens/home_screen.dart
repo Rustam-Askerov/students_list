@@ -160,48 +160,51 @@ class Header extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+          Container(
+            margin: const EdgeInsets.only(right: 90),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                backgroundColor: const MaterialStatePropertyAll(
+                    ThemeColors.backgroundSecondary),
+                overlayColor:
+                    const MaterialStatePropertyAll(ThemeColors.backgroundPrimary),
+                surfaceTintColor: const MaterialStatePropertyAll(
+                    ThemeColors.backgroundSecondary),
               ),
-              backgroundColor: const MaterialStatePropertyAll(
-                  ThemeColors.backgroundSecondary),
-              overlayColor:
-                  const MaterialStatePropertyAll(ThemeColors.backgroundPrimary),
-              surfaceTintColor: const MaterialStatePropertyAll(
-                  ThemeColors.backgroundSecondary),
-            ),
-            onPressed: () {
-              Get.to(
-                  () => const AddUpdateData(
-                        addUpdate: true,
-                      ),
-                  routeName: '/AddUpdateData');
-            },
-            child: IntrinsicWidth(
-              child: Container(
-                padding: const EdgeInsets.only(left: 6, top: 4, bottom: 6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Row(
-                    children: [
-                      Text(
-                        Dictionary.addButton,
-                        style: TextStyles.mainText
-                            .copyWith(color: ThemeColors.addIcon),
-                      ),
-                      const SizedBox(width: 25,),
-                      Image.asset(
-                        'assets/icons/add.png',
-                        height: 25,
-                        width: 23,
-                      ),
-                    ],
+              onPressed: () {
+                Get.to(
+                    () => const AddUpdateData(
+                          addUpdate: true,
+                        ),
+                    routeName: '/AddUpdateData');
+              },
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 6, top: 4, bottom: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Row(
+                      children: [
+                        Text(
+                          Dictionary.addButton,
+                          style: TextStyles.mainText
+                              .copyWith(color: ThemeColors.addIcon),
+                        ),
+                        const SizedBox(width: 25,),
+                        Image.asset(
+                          'assets/icons/add.png',
+                          height: 25,
+                          width: 23,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

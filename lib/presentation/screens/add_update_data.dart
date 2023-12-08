@@ -91,12 +91,11 @@ class _AddUpdateDataState extends State<AddUpdateData> {
                               surfaceTintColor: const MaterialStatePropertyAll(
                                   ThemeColors.backgroundSecondary),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               widget.addUpdate
-                                  ? _addUpdateController.addStudent()
-                                  : _addUpdateController
-                                      .updateStudent(widget.student!);
-                              Get.back();
+                                  ? await _addUpdateController.addStudent().then((value) => Get.back())
+                                  : await _addUpdateController
+                                      .updateStudent(widget.student!).then((value) => Get.back());
                             },
                             child: SizedBox(
                               height: 50,
