@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:students_list/presentation/bindings.dart';
-import 'package:students_list/presentation/screens/home_screen.dart';
+import 'package:students_list/presentation/pages/home_page/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute: '/',
-      home: const HomeScreen(),
+      home: const HomePage(),
       initialBinding: StudListBindings(),
       localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
       supportedLocales: const [Locale('en'), Locale('ru')],

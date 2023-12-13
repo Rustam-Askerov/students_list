@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/models/student_model.dart';
 import 'package:students_list/presentation/controllers/add_update_controller.dart';
-import 'package:students_list/presentation/controllers/home_screen_controller.dart';
+import 'package:students_list/presentation/controllers/home_page_controller.dart';
 import 'package:students_list/presentation/controllers/table_controller.dart';
-import 'package:students_list/presentation/screens/add_update_data.dart';
+import 'package:students_list/presentation/pages/add_update_data_page/add_update_data_page.dart';
+import 'package:students_list/presentation/pages/student_information_page/student_information_page.dart';
 import 'package:students_list/presentation/styles_and_colors/colors.dart';
 import 'package:students_list/presentation/styles_and_colors/styles.dart';
 
@@ -49,30 +50,25 @@ class _CustomizableTableState extends State<CustomizableTable> {
       initState: (state) {
         _tableController.columnWidthInit(widget.fields.length);
       },
-      builder: (controller) => IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Pagination(
-                  pages: (widget.rowsData.length / 8).ceil(),
-                  boxDecoration: widget.fieldsDecoration,
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-              ],
+      builder: (controller) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left:16,right: 16),
+            child: Pagination(
+              pages: (widget.rowsData.length / 8).ceil(),
+              boxDecoration: widget.fieldsDecoration,
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: ScrollController(),
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
                 controller: ScrollController(),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  controller: ScrollController(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left:16,right: 16),
                   child: Column(
                     children: [
                       Fields(
@@ -98,9 +94,8 @@ class _CustomizableTableState extends State<CustomizableTable> {
                           filedsMargin: widget.fieldsMargin,
                           rowsMargin: widget.rowsMargin,
                           deleteRow: widget.deleteRow,
-                          rowIndex:
-                              (_tableController.currentPage.value - 1) * 8 +
-                                  index,
+                          rowIndex: (_tableController.currentPage.value - 1) * 8 +
+                              index,
                         ),
                       ),
                     ],
@@ -108,8 +103,8 @@ class _CustomizableTableState extends State<CustomizableTable> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -306,8 +301,8 @@ class TableRow extends StatelessWidget {
 
   static final AddUpdateController _addUpdateController =
       Get.find<AddUpdateController>();
-  static final HomeScreenController _homeScreenController =
-      Get.find<HomeScreenController>();
+  static final HomePageController _homeScreenController =
+      Get.find<HomePageController>();
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -321,7 +316,14 @@ class TableRow extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: rowsMargin / 2),
         decoration: rowsDecoration,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Get.to(
+              () => StudentInformationPage(
+                student: _homeScreenController
+                    .data[_homeScreenController.data.length - rowIndex - 1],
+              ),
+            );
+          },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -347,7 +349,7 @@ class TableRow extends StatelessWidget {
                                         .isGraduate ==
                                     null) {
                                   Get.to(
-                                          () => AddUpdateData(
+                                          () => AddUpdateDataPage(
                                                 addUpdate: false,
                                                 studentIndex: rowIndex,
                                                 student: _homeScreenController

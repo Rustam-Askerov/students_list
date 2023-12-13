@@ -10,7 +10,7 @@ abstract class ScientificSupervisorDataSource {
   Future<ScientificSupervisorModel> createSupervisor(
     String fullName,
     String post,
-    String academicDegree,
+    String? academicDegree,
     int departmentId,
   );
 
@@ -29,7 +29,7 @@ class ScientificSupervisorRemoteDataSource
     extends ScientificSupervisorDataSource {
   @override
   Future<ScientificSupervisorModel> createSupervisor(String fullName,
-      String post, String academicDegree, int departmentId) async {
+      String post, String? academicDegree, int departmentId) async {
     final uri = Uri.http(
         ConnectionMode.getConnectionUrl(), '/api/create_new_supervisor');
     final response = await http.post(
@@ -38,7 +38,7 @@ class ScientificSupervisorRemoteDataSource
       body: json.encode({
         'full_name': fullName,
         'post': post,
-        'academic_degree': academicDegree != '' ? academicDegree : null,
+        'academic_degree': academicDegree,
         'fk_department_id': departmentId,
       }),
     );

@@ -10,7 +10,7 @@ class ScientificSupervisorRepositoryImpl
       {required this.scientificSupervisorDataSource});
   @override
   Future<ScientificSupervisorModel> createSupervisor(String fullName, String post,
-      String academicDegree, int departmentId) async {
+      String? academicDegree, int departmentId) async {
     return await scientificSupervisorDataSource.createSupervisor(
         fullName, post, academicDegree, departmentId);
   }

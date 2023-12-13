@@ -12,12 +12,12 @@ import 'package:students_list/data/repositories_impl/department_repository_impl.
 import 'package:students_list/data/repositories_impl/students_list_repository_impl.dart';
 import 'package:students_list/data/repositories_impl/supervisors_repository_impl.dart';
 import 'package:students_list/data/repositories_impl/works_repository_impl.dart';
-import 'package:students_list/presentation/controllers/home_screen_controller.dart';
+import 'package:students_list/presentation/controllers/home_page_controller.dart';
 import 'package:students_list/presentation/styles_and_colors/dictionary.dart';
 
 class AddUpdateController extends GetxController {
-  final HomeScreenController _homeScreenController =
-      Get.find<HomeScreenController>();
+  final HomePageController _homeScreenController =
+      Get.find<HomePageController>();
   // ---------------------------------репозитории----------------------------------------------
   final StudentsListRepositoryImpl repositry = StudentsListRepositoryImpl(
       studentsListDataSource: StudentsListRemoteDataSource());
@@ -69,8 +69,8 @@ class AddUpdateController extends GetxController {
       TextEditingController(text: '');
   final TextEditingController supervisorFatherName =
       TextEditingController(text: '');
-  final TextEditingController post = TextEditingController(text: '');
-  final TextEditingController academicDegree = TextEditingController(text: '');
+  String? post;
+  String? academicDegree;
   //----------------------------------поля формы заполнения------------------------------------
 
   Future<bool> getData() async {
@@ -128,8 +128,8 @@ class AddUpdateController extends GetxController {
         supervisor = await _supervisorRepositoryImpl.createSupervisor(
             getFullName(supervisorSurname.text, supervisorFirstName.text,
                 supervisorFatherName.text),
-            post.text,
-            academicDegree.text,
+            post!,
+            academicDegree,
             departments
                 .where((element) => element.departmentName == departmentName)
                 .first
@@ -185,7 +185,7 @@ class AddUpdateController extends GetxController {
     }
 
     await _homeScreenController.getData();
-    update();
+    _homeScreenController.update();
   }
 
   //редактирование информации о студенте
@@ -202,13 +202,13 @@ class AddUpdateController extends GetxController {
           if (supervisorSurname.text != '' &&
               supervisorFirstName.text != '' &&
               supervisorFatherName.text != '' &&
-              post.text != '') {
+              post != null) {
             //если пользователь вписал данные
             supervisorModel = await _supervisorRepositoryImpl.createSupervisor(
                 getFullName(supervisorSurname.text, supervisorFirstName.text,
                     supervisorFatherName.text),
-                post.text,
-                academicDegree.text,
+                post!,
+                academicDegree!,
                 departments
                     .where(
                         (element) => element.departmentName == departmentName)
@@ -229,7 +229,7 @@ class AddUpdateController extends GetxController {
         if (supervisorSurname.text == '' &&
             supervisorFirstName.text == '' &&
             supervisorFatherName.text == '' &&
-            post.text == '') {
+            post == null) {
           supervisorModel = null;
           if (currentWork != null) {
             await _worksRepositoryImpl.deleteWork(currentWork!.id);
@@ -237,7 +237,7 @@ class AddUpdateController extends GetxController {
         } else if (supervisorSurname.text != '' &&
             supervisorFirstName.text != '' &&
             supervisorFatherName.text != '' &&
-            post.text != '') {
+            post != null) {
           //cлучай если при редактировании научный руководитель уже вписан,но пользователь поменял его на другого
           if (equalSupervisor() != null) {
             supervisorModel = equalSupervisor()!;
@@ -245,8 +245,8 @@ class AddUpdateController extends GetxController {
             supervisorModel = await _supervisorRepositoryImpl.createSupervisor(
                 getFullName(supervisorSurname.text, supervisorFirstName.text,
                     supervisorFatherName.text),
-                post.text,
-                academicDegree.text,
+                post!,
+                academicDegree!,
                 departments
                     .where(
                         (element) => element.departmentName == departmentName)
@@ -353,8 +353,8 @@ class AddUpdateController extends GetxController {
       supervisorSurname.text = supervisorFullName[0];
       supervisorFirstName.text = supervisorFullName[1];
       supervisorFatherName.text = supervisorFullName[2];
-      post.text = currentSupervisor!.post;
-      academicDegree.text = currentSupervisor!.academicDegree ?? '';
+      post = currentSupervisor!.post;
+      academicDegree = currentSupervisor!.academicDegree;
     }
     if (currentWork != null) {
       workName.text = currentWork!.name;
@@ -384,8 +384,8 @@ class AddUpdateController extends GetxController {
     supervisorSurname.clear();
     supervisorFirstName.clear();
     supervisorFatherName.clear();
-    post.clear();
-    academicDegree.clear();
+    post = null;
+    academicDegree = null;
     workName.clear();
     workType = null;
     assessment = null;
@@ -418,8 +418,8 @@ class AddUpdateController extends GetxController {
     supervisorSurname.clear();
     supervisorFirstName.clear();
     supervisorFatherName.clear();
-    post.clear();
-    academicDegree.clear();
+    post = null;
+    academicDegree = null;
     update();
   }
 
@@ -503,8 +503,8 @@ class AddUpdateController extends GetxController {
             element.fullName ==
                 getFullName(supervisorSurname.text, supervisorFirstName.text,
                     supervisorFatherName.text) &&
-            element.post == post.text &&
-            element.academicDegree == academicDegree.text &&
+            element.post == post! &&
+            element.academicDegree == academicDegree &&
             element.departmentId ==
                 departments
                     .where(
@@ -517,8 +517,8 @@ class AddUpdateController extends GetxController {
               element.fullName ==
                   getFullName(supervisorSurname.text, supervisorFirstName.text,
                       supervisorFatherName.text) &&
-              element.post == post.text &&
-              element.academicDegree == academicDegree.text &&
+              element.post == post! &&
+              element.academicDegree == academicDegree &&
               element.departmentId ==
                   departments
                       .where(
@@ -528,6 +528,121 @@ class AddUpdateController extends GetxController {
           .first;
     } else {
       return null;
+    }
+  }
+
+  bool checkFilledFields() {
+    if (graduationIndicator == true) {
+      if (surname.text != '' &&
+          firstName.text != '' &&
+          fatherName.text != '' &&
+          group.text != '' &&
+          studNum.text != '' &&
+          stage != null &&
+          yearOfGraduation != null &&
+          departmentName != null &&
+          faculty != null &&
+          supervisorSurname.text != '' &&
+          supervisorFirstName.text != '' &&
+          supervisorFatherName.text != '' &&
+          post != null &&
+          workName.text != '' &&
+          workDueDate != null &&
+          workType != null &&
+          assessment != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (graduationIndicator == false &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
+        yearOfGraduation != null &&
+        departmentName == null &&
+        faculty == null) {
+      return true;
+    } else if (graduationIndicator == false &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
+        yearOfGraduation != null &&
+        departmentName != null &&
+        faculty != null &&
+        supervisorSurname.text == '' &&
+        supervisorFirstName.text == '' &&
+        supervisorFatherName.text == '' &&
+        post == null &&
+        academicDegree == null) {
+      return true;
+    } else if (graduationIndicator == false &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
+        yearOfGraduation != null &&
+        departmentName != null &&
+        faculty != null &&
+        supervisorSurname.text != '' &&
+        supervisorFirstName.text != '' &&
+        supervisorFatherName.text != '' &&
+        post != null &&
+        ((workName.text == '' &&
+                workDueDate == null &&
+                workType == null &&
+                assessment == null) ||
+            (workName.text != '' &&
+                workDueDate == null &&
+                workType != null &&
+                assessment == null))) {
+      return true;
+    } else if (graduationIndicator == null &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
+        faculty != null &&
+        departmentName != null &&
+        supervisorSurname.text == '' &&
+        supervisorFirstName.text == '' &&
+        supervisorFatherName.text == '' &&
+        post == null &&
+        academicDegree == null) {
+      return true;
+    } else if (graduationIndicator == null &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
+        departmentName != null &&
+        faculty != null &&
+        supervisorSurname.text != '' &&
+        supervisorFirstName.text != '' &&
+        supervisorFatherName.text != '' &&
+        post != null &&
+        ((workName.text == '' &&
+                workDueDate == null &&
+                workType == null &&
+                assessment == null) ||
+            (workName.text != '' &&
+                workDueDate == null &&
+                workType != null &&
+                assessment == null))) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
