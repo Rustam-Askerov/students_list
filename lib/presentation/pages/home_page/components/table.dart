@@ -8,14 +8,15 @@ import 'package:students_list/presentation/widgets/customizable_table.dart';
 
 class HomePageTable extends StatelessWidget {
   const HomePageTable({super.key});
-  static final homeScreenController = Get.find<HomePageController>();
+  static final homePageController = Get.find<HomePageController>();
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GetBuilder(
-        init: homeScreenController,
-        builder: (controller) => CustomizableTable(
+      child: CustomizableTable(
+          getData: () async {
+            await homePageController.getData();
+          },
           fieldsDecoration: BoxDecoration(
             color: ThemeColors.backgroundSecondary,
             borderRadius: BorderRadius.circular(8),
@@ -44,13 +45,13 @@ class HomePageTable extends StatelessWidget {
               color: ThemeColors.textColorPrimary, fontWeight: FontWeight.w600),
           fields: Dictionary.fields,
           fieldsMargin: 10,
-          rowsData: controller.rows,
-          data: homeScreenController.data,
+          rowsData: homePageController.rows,
+          data: homePageController.data,
           rowDataTextStyle:
               TextStyles.mainText.copyWith(color: ThemeColors.textColorPrimary),
-          deleteRow: controller.deleteStudent,
+          deleteRow: homePageController.deleteStudent,
         ),
-      ),
+      
     );
   }
 }

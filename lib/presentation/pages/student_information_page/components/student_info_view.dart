@@ -21,12 +21,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.fullName,
                 style: TextStyles.mainText
@@ -35,12 +29,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 student.fullName,
                 style: TextStyles.mainText
@@ -53,12 +41,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.studNumber,
                 style: TextStyles.mainText
@@ -67,12 +49,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 student.studentIDnumber.toString(),
                 style: TextStyles.mainText
@@ -85,12 +61,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.yearOfAdmissionTable,
                 style: TextStyles.mainText
@@ -99,12 +69,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 student.dateOfAdmission.toString(),
                 style: TextStyles.mainText
@@ -117,12 +81,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.yearOfGraduationTable,
                 style: TextStyles.mainText
@@ -131,12 +89,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 (student.dateOfGraduation ?? '').toString(),
                 style: TextStyles.mainText
@@ -149,12 +101,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.stageTable,
                 style: TextStyles.mainText
@@ -163,12 +109,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 student.stage,
                 style: TextStyles.mainText
@@ -181,12 +121,6 @@ class StudentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.yearOfGraduationTable,
                 style: TextStyles.mainText
@@ -195,12 +129,6 @@ class StudentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 student.isGraduate == null
                     ? 'Обучается'

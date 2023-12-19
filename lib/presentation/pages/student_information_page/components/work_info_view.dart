@@ -26,12 +26,7 @@ class WorkInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.workNameTable,
                 style: TextStyles.mainText
@@ -40,12 +35,7 @@ class WorkInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 work.name,
                 style: TextStyles.mainText
@@ -58,12 +48,7 @@ class WorkInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.workDueDateTable,
                 style: TextStyles.mainText
@@ -72,12 +57,7 @@ class WorkInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 work.workDueDate != null
                     ? _studentInfoPageController
@@ -93,12 +73,7 @@ class WorkInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.workTypeTable,
                 style: TextStyles.mainText
@@ -107,12 +82,7 @@ class WorkInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 work.workType,
                 style: TextStyles.mainText
@@ -125,12 +95,7 @@ class WorkInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.assessmentTable,
                 style: TextStyles.mainText
@@ -139,12 +104,7 @@ class WorkInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 work.assesment ?? '',
                 style: TextStyles.mainText

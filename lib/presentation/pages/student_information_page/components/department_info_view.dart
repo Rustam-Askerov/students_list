@@ -21,12 +21,6 @@ class DepartmentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.tableFaculty,
                 style: TextStyles.mainText
@@ -35,12 +29,6 @@ class DepartmentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 department.faculty,
                 style: TextStyles.mainText
@@ -53,12 +41,6 @@ class DepartmentInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 Dictionary.department,
                 style: TextStyles.mainText
@@ -67,12 +49,6 @@ class DepartmentInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
               child: Text(
                 department.departmentName.toString(),
                 style: TextStyles.mainText

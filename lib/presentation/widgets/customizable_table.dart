@@ -8,6 +8,7 @@ import 'package:students_list/presentation/controllers/table_controller.dart';
 import 'package:students_list/presentation/pages/add_update_data_page/add_update_data_page.dart';
 import 'package:students_list/presentation/pages/student_information_page/student_information_page.dart';
 import 'package:students_list/presentation/styles_and_colors/colors.dart';
+import 'package:students_list/presentation/styles_and_colors/dictionary.dart';
 import 'package:students_list/presentation/styles_and_colors/styles.dart';
 
 final CustomizableTableController _tableController =
@@ -26,6 +27,7 @@ class CustomizableTable extends StatefulWidget {
     required this.data,
     this.rowsMargin = 24,
     required this.deleteRow,
+    required this.getData,
   });
   final BoxDecoration fieldsDecoration;
   final Decoration rowsDecoration;
@@ -37,7 +39,7 @@ class CustomizableTable extends StatefulWidget {
   final double fieldsMargin;
   final double rowsMargin;
   final Future<void> Function(int id) deleteRow;
-
+  final Future<void> Function() getData;
   @override
   State<CustomizableTable> createState() => _CustomizableTableState();
 }
@@ -50,61 +52,136 @@ class _CustomizableTableState extends State<CustomizableTable> {
       initState: (state) {
         _tableController.columnWidthInit(widget.fields.length);
       },
-      builder: (controller) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left:16,right: 16),
-            child: Pagination(
-              pages: (widget.rowsData.length / 8).ceil(),
-              boxDecoration: widget.fieldsDecoration,
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: ScrollController(),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                controller: ScrollController(),
-                child: Padding(
-                  padding: const EdgeInsets.only(left:16,right: 16),
-                  child: Column(
-                    children: [
-                      Fields(
-                          fields: widget.fields,
-                          fieldsDecoration: widget.fieldsDecoration,
-                          fieldsTextStyle: widget.fieldsTextStyle,
-                          rowsMargin: widget.rowsMargin,
-                          fieldsMargin: widget.fieldsMargin),
-                      ...List.generate(
-                        widget.rowsData.isNotEmpty
-                            ? _tableController.currentPage.value !=
-                                    (widget.rowsData.length / 8).ceil()
-                                ? 8
-                                : widget.rowsData.length -
-                                    (_tableController.currentPage.value - 1) * 8
-                            : 0,
-                        (index) => TableRow(
-                          rowData: widget.rowsData[
-                              (_tableController.currentPage.value - 1) * 8 +
-                                  index],
-                          rowsDecoration: widget.rowsDecoration,
-                          rowDataTextStyle: widget.rowDataTextStyle,
-                          filedsMargin: widget.fieldsMargin,
-                          rowsMargin: widget.rowsMargin,
-                          deleteRow: widget.deleteRow,
-                          rowIndex: (_tableController.currentPage.value - 1) * 8 +
-                              index,
-                        ),
+      builder: (controller) => IntrinsicWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Pagination(
+                    pages: (widget.rowsData.length / 8).ceil(),
+                    boxDecoration: widget.fieldsDecoration,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: ThemeColors.hintTextColor.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 7,
+                        offset: const Offset(5, 5),
                       ),
                     ],
                   ),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shadowColor:
+                          const MaterialStatePropertyAll(Colors.transparent),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      backgroundColor: const MaterialStatePropertyAll(
+                          ThemeColors.backgroundSecondary),
+                      overlayColor: const MaterialStatePropertyAll(
+                          ThemeColors.backgroundPrimary),
+                      surfaceTintColor: const MaterialStatePropertyAll(
+                          ThemeColors.backgroundSecondary),
+                    ),
+                    onPressed: () async {
+                      await widget.getData();
+                    },
+                    child: IntrinsicWidth(
+                      child: Container(
+                        height: 62,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              Dictionary.update,
+                              style: TextStyles.mainText.copyWith(
+                                  color: ThemeColors.textColorPrimary),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            const Icon(
+                              Icons.refresh,
+                              color: ThemeColors.addIcon,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                controller: ScrollController(),
+                child: Column(
+                  children: [
+                    Fields(
+                        fields: widget.fields,
+                        fieldsDecoration: widget.fieldsDecoration,
+                        fieldsTextStyle: widget.fieldsTextStyle,
+                        rowsMargin: widget.rowsMargin,
+                        fieldsMargin: widget.fieldsMargin),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        controller: ScrollController(),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16),
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                widget.rowsData.isNotEmpty
+                                    ? _tableController.currentPage.value !=
+                                            (widget.rowsData.length / 8).ceil()
+                                        ? 8
+                                        : widget.rowsData.length -
+                                            (_tableController.currentPage.value -
+                                                    1) *
+                                                8
+                                    : 0,
+                                (index) => TableRow(
+                                  rowData: widget.rowsData[
+                                      (_tableController.currentPage.value - 1) *
+                                              8 +
+                                          index],
+                                  rowsDecoration: widget.rowsDecoration,
+                                  rowDataTextStyle: widget.rowDataTextStyle,
+                                  filedsMargin: widget.fieldsMargin,
+                                  rowsMargin: widget.rowsMargin,
+                                  deleteRow: widget.deleteRow,
+                                  rowIndex:
+                                      (_tableController.currentPage.value - 1) *
+                                              8 +
+                                          index,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -361,6 +438,27 @@ class TableRow extends StatelessWidget {
                                           routeName: '/AddUpdateData')!
                                       .then((value) =>
                                           _addUpdateController.clearFields());
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      elevation: 10,
+                                      backgroundColor:
+                                          ThemeColors.backgroundSecondary,
+                                      content: Text(
+                                        'Запись о студенте заархивирована. Редактирование невозможно.',
+                                        style: TextStyles.header.copyWith(
+                                            color:
+                                                ThemeColors.textColorPrimary),
+                                      ),
+                                      action: SnackBarAction(
+                                        textColor: ThemeColors.textColorPrimary,
+                                        label: 'ОК',
+                                        onPressed: () {
+                                          // Some code to undo the change.
+                                        },
+                                      ),
+                                    ),
+                                  );
                                 }
                               },
                               child: Image.asset(

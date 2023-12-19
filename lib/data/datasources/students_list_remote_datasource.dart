@@ -47,30 +47,39 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
       int dateOfAdmission,
       int? dateOfGraduation,
       bool? isGraduate) async {
-    final uri =
-        Uri.http(ConnectionMode.getConnectionUrl(), '/api/create_new_student');
-    final response = await http.post(
-      uri,
-      headers: ConnectionMode().getHeaders(),
-      body: json.encode({
-        'full_name': fullName,
-        'group_name': groupName,
-        'student_id_number': studentIDnumber,
-        'fk_department_id': departmentID,
-        'fk_scientific_supervisor_id': scientificSupervisorID,
-        'stage': stage,
-        'date_of_admission': '$dateOfAdmission-01-08',
-        'date_of_graduate': dateOfGraduation != null
-            ? '$dateOfGraduation-01-08'
-            : dateOfGraduation,
-        'is_graduate': isGraduate
-      }),
-    );
-    if (response.statusCode == 200) {
-      final student = json.decode(response.body);
-      return StudentModel.fromJson(student);
-    } else {
-      throw Exception(response.statusCode);
+    try {
+      final uri = Uri.http(
+          ConnectionMode.getConnectionUrl(), '/api/create_new_student');
+      final response = await http.post(
+        uri,
+        headers: ConnectionMode().getHeaders(),
+        body: json.encode({
+          'full_name': fullName,
+          'group_name': groupName,
+          'student_id_number': studentIDnumber,
+          'fk_department_id': departmentID,
+          'fk_scientific_supervisor_id': scientificSupervisorID,
+          'stage': stage,
+          'date_of_admission': '$dateOfAdmission-01-08',
+          'date_of_graduate': dateOfGraduation != null
+              ? '$dateOfGraduation-01-08'
+              : dateOfGraduation,
+          'is_graduate': isGraduate
+        }),
+      );
+      if (response.statusCode == 200) {
+        final student = json.decode(response.body);
+        return StudentModel.fromJson(student);
+      } else if (json.decode(response.body)['error_code'] == '23505') {
+        throw Exception(
+            'Студент с номером студенческого билета $studentIDnumber уже существует.');
+      } else if (response.statusCode == 500) {
+        throw Exception();
+      } else {
+        throw Exception(jsonDecode(response.body)['message']);
+      }
+    } catch (error) {
+      throw Exception(error);
     }
   }
 
@@ -86,31 +95,40 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
       int dateOfAdmission,
       int? dateOfGraduation,
       bool? isGraduate) async {
-    final uri =
-        Uri.http(ConnectionMode.getConnectionUrl(), '/api/update_student/$id');
-    final response = await http.put(
-      uri,
-      headers: ConnectionMode().getHeaders(),
-      body: json.encode({
-        'id': id,
-        'full_name': fullName,
-        'group_name': groupName,
-        'student_id_number': studentIDnumber,
-        'fk_department_id': departmentID,
-        'fk_scientific_supervisor_id': scientificSupervisorID,
-        'stage': stage,
-        'date_of_admission': '$dateOfAdmission-01-08',
-        'date_of_graduate': dateOfGraduation != null
-            ? '$dateOfGraduation-01-08'
-            : dateOfGraduation,
-        'is_graduate': isGraduate
-      }),
-    );
-    if (response.statusCode == 200) {
-      final student = json.decode(response.body);
-      return StudentModel.fromJson(student);
-    } else {
-      throw Exception(response.statusCode);
+    try {
+      final uri = Uri.http(
+          ConnectionMode.getConnectionUrl(), '/api/update_student/$id');
+      final response = await http.put(
+        uri,
+        headers: ConnectionMode().getHeaders(),
+        body: json.encode({
+          'id': id,
+          'full_name': fullName,
+          'group_name': groupName,
+          'student_id_number': studentIDnumber,
+          'fk_department_id': departmentID,
+          'fk_scientific_supervisor_id': scientificSupervisorID,
+          'stage': stage,
+          'date_of_admission': '$dateOfAdmission-01-08',
+          'date_of_graduate': dateOfGraduation != null
+              ? '$dateOfGraduation-01-08'
+              : dateOfGraduation,
+          'is_graduate': isGraduate
+        }),
+      );
+      if (response.statusCode == 200) {
+        final student = json.decode(response.body);
+        return StudentModel.fromJson(student);
+      } else if (json.decode(response.body)['error_code'] == '23505') {
+        throw Exception(
+            'Студент с номером студенческого билета $studentIDnumber уже существует.');
+      } else if (response.statusCode == 500) {
+        throw Exception(response.statusCode);
+      } else {
+        throw Exception(jsonDecode(response.body)['message']);
+      }
+    } catch (error) {
+      throw Exception(error);
     }
   }
 
@@ -139,20 +157,26 @@ class StudentsListRemoteDataSource extends StudentsListDataSource {
   }
 
   Future<List<StudentModel>> _getDataFromUrl(String url) async {
-    final uri = Uri.http(
-      ConnectionMode.getConnectionUrl(),
-      url,
-    );
-    final response = await http.get(
-      uri,
-    );
-    if (response.statusCode == 200) {
-      final students = json.decode(response.body);
-      return (students as List)
-          .map((students) => StudentModel.fromJson(students))
-          .toList();
-    } else {
-      return [];
+    try {
+      final uri = Uri.http(
+        ConnectionMode.getConnectionUrl(),
+        url,
+      );
+      final response = await http.get(
+        uri,
+      );
+      if (response.statusCode == 200) {
+        final students = json.decode(response.body);
+        return (students as List)
+            .map((students) => StudentModel.fromJson(students))
+            .toList();
+      } else if (response.statusCode == 500) {
+        throw Exception(json.decode(response.body)['error_code']);
+      } else {
+        throw Exception(json.decode(response.body)['error_code']);
+      }
+    } catch (error) {
+      throw Exception(error);
     }
   }
 }

@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/models/student_model.dart';
 import 'package:students_list/presentation/controllers/add_update_controller.dart';
@@ -23,6 +27,45 @@ class AddUpdateDataPage extends StatefulWidget {
 
 class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
   static final _addUpdateController = Get.find<AddUpdateController>();
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  get developer => null;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen(_addUpdateController.updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _addUpdateController.updateConnectionStatus(result);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +74,44 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
           ? _addUpdateController.getDataCreate()
           : _addUpdateController.getDataUpdate(widget.student!),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: SizedBox(
-              width: 100,
-              height: 20,
-              child: LinearProgressIndicator(
-                color: ThemeColors.textColorPrimary,
-              ),
-            ),
-          );
-        } else {
-          return GetBuilder<AddUpdateController>(
-            init: _addUpdateController,
-            builder: (controller) {
+        return GetBuilder<AddUpdateController>(
+          init: _addUpdateController,
+          builder: (controller) {
+            if (_addUpdateController.connectionStatus ==
+                ConnectivityResult.none) {
+              return Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Center(
+                  child: Text(
+                    Dictionary.noInternet,
+                    style: TextStyles.header
+                        .copyWith(color: ThemeColors.textColorPrimary),
+                  ),
+                ),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: SizedBox(
+                  width: 100,
+                  height: 20,
+                  child: LinearProgressIndicator(
+                    color: ThemeColors.textColorPrimary,
+                  ),
+                ),
+              );
+            } else if (snapshot.hasError ||
+                !_addUpdateController.serviceAvaliable) {
+              return Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Center(
+                  child: Text(
+                    Dictionary.serviceIsNotAvaliable,
+                    style: TextStyles.header
+                        .copyWith(color: ThemeColors.textColorPrimary),
+                  ),
+                ),
+              );
+            } else {
               return Scaffold(
                 backgroundColor: ThemeColors.backgroundPrimary,
                 body: SingleChildScrollView(
@@ -96,21 +163,62 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
                                   ThemeColors.backgroundSecondary),
                             ),
                             onPressed: () async {
-                              widget.addUpdate
-                                  ? await _addUpdateController
+                              if (widget.addUpdate) {
+                                try {
+                                  await _addUpdateController
                                       .addStudent()
-                                      .then((value) => Get.back())
-                                  : _addUpdateController.checkFilledFields()
-                                      ? await _addUpdateController
-                                          .updateStudent(widget.student!)
-                                          .then((value) => Get.back())
-                                      : ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                            elevation: 10,
+                                      .then((value) => Get.back());
+                                } catch (error) {
+                                  if (error.toString().contains('500')) {
+                                    _addUpdateController
+                                        .updateServiceAvalibility(false);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        elevation: 10,
+                                        backgroundColor:
+                                            ThemeColors.backgroundSecondary,
+                                        content: Text(
+                                          error
+                                              .toString()
+                                              .replaceAll('Exception: ', ''),
+                                          style: TextStyles.header.copyWith(
+                                              color:
+                                                  ThemeColors.textColorPrimary),
+                                        ),
+                                        action: SnackBarAction(
+                                          textColor:
+                                              ThemeColors.textColorPrimary,
+                                          label: 'ОК',
+                                          onPressed: () {
+                                            // Some code to undo the change.
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } else {
+                                if (_addUpdateController.checkFilledFields()) {
+                                  try {
+                                    await _addUpdateController
+                                        .updateStudent(widget.student!)
+                                        .then((value) => Get.back());
+                                  } catch (error) {
+                                    if (error.toString().contains('500')) {
+                                      _addUpdateController
+                                          .updateServiceAvalibility(false);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          elevation: 10,
                                           backgroundColor:
                                               ThemeColors.backgroundSecondary,
                                           content: Text(
-                                            'Проверьте корректность и полноту введеных данных',
+                                            error
+                                                .toString()
+                                                .replaceAll('Exception: ', ''),
                                             style: TextStyles.header.copyWith(
                                                 color: ThemeColors
                                                     .textColorPrimary),
@@ -123,7 +231,33 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
                                               // Some code to undo the change.
                                             },
                                           ),
-                                        ));
+                                        ),
+                                      );
+                                    }
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      elevation: 10,
+                                      backgroundColor:
+                                          ThemeColors.backgroundSecondary,
+                                      content: Text(
+                                        'Проверьте корректность и полноту введеных данных',
+                                        style: TextStyles.header.copyWith(
+                                            color:
+                                                ThemeColors.textColorPrimary),
+                                      ),
+                                      action: SnackBarAction(
+                                        textColor: ThemeColors.textColorPrimary,
+                                        label: 'ОК',
+                                        onPressed: () {
+                                          // Some code to undo the change.
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }
+                              }
                             },
                             child: SizedBox(
                               height: 50,
@@ -144,9 +278,9 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
                   ),
                 ),
               );
-            },
-          );
-        }
+            }
+          },
+        );
       },
     );
   }

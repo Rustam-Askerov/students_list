@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/datasources/departments_remote_datasource.dart';
@@ -18,6 +19,8 @@ import 'package:students_list/presentation/styles_and_colors/dictionary.dart';
 class AddUpdateController extends GetxController {
   final HomePageController _homeScreenController =
       Get.find<HomePageController>();
+  ConnectivityResult connectionStatus = ConnectivityResult.none;
+  bool serviceAvaliable = true;
   // ---------------------------------репозитории----------------------------------------------
   final StudentsListRepositoryImpl repositry = StudentsListRepositoryImpl(
       studentsListDataSource: StudentsListRemoteDataSource());
@@ -73,6 +76,11 @@ class AddUpdateController extends GetxController {
   String? academicDegree;
   //----------------------------------поля формы заполнения------------------------------------
 
+  Future<void> updateConnectionStatus(ConnectivityResult result) async {
+    connectionStatus = result;
+    update();
+  }
+
   Future<bool> getData() async {
     works = await _worksRepositoryImpl.getWorks();
     supervisors = await _supervisorRepositoryImpl.getSupervisors();
@@ -115,28 +123,51 @@ class AddUpdateController extends GetxController {
   //добавление новой информации о студенте
   Future<void> addStudent() async {
     ScientificSupervisorModel supervisor;
-    if (supervisorSurname.text != '' &&
-        supervisorFirstName.text != '' &&
-        supervisorFatherName.text != '' &&
-        faculty != null &&
-        departmentName != null &&
-        faculty != Dictionary.nonChose &&
-        departmentName != Dictionary.nonChose) {
-      if (equalSupervisor() != null) {
-        supervisor = equalSupervisor()!;
-      } else {
-        supervisor = await _supervisorRepositoryImpl.createSupervisor(
-            getFullName(supervisorSurname.text, supervisorFirstName.text,
-                supervisorFatherName.text),
-            post!,
-            academicDegree,
-            departments
-                .where((element) => element.departmentName == departmentName)
-                .first
-                .id);
-      }
-      if (supervisor.id > -1) {
-        StudentModel student = await repositry.createStudent(
+    try {
+      if (supervisorSurname.text != '' &&
+          supervisorFirstName.text != '' &&
+          supervisorFatherName.text != '' &&
+          faculty != null &&
+          departmentName != null &&
+          faculty != Dictionary.nonChose &&
+          departmentName != Dictionary.nonChose) {
+        if (equalSupervisor() != null) {
+          supervisor = equalSupervisor()!;
+        } else {
+          supervisor = await _supervisorRepositoryImpl.createSupervisor(
+              getFullName(supervisorSurname.text, supervisorFirstName.text,
+                  supervisorFatherName.text),
+              post!,
+              academicDegree,
+              departments
+                  .where((element) => element.departmentName == departmentName)
+                  .first
+                  .id);
+        }
+        if (supervisor.id > -1) {
+          StudentModel student = await repositry.createStudent(
+              getFullName(surname.text, firstName.text, fatherName.text),
+              group.text,
+              int.parse(studNum.text),
+              departments
+                  .where((element) => element.departmentName == departmentName)
+                  .first
+                  .id,
+              supervisor.id,
+              stage!,
+              yearOfAdmission.year,
+              yearOfGraduation?.year,
+              graduationIndicator);
+          if (student.id > -1 && workName.text != '' && workType != null) {
+            await _worksRepositoryImpl.createWork(workName.text, student.id,
+                workType!, assessment, workDueDateText.text);
+          }
+        }
+      } else if (faculty != null &&
+          departmentName != null &&
+          faculty != Dictionary.nonChose &&
+          departmentName != Dictionary.nonChose) {
+        await repositry.createStudent(
             getFullName(surname.text, firstName.text, fatherName.text),
             group.text,
             int.parse(studNum.text),
@@ -144,166 +175,152 @@ class AddUpdateController extends GetxController {
                 .where((element) => element.departmentName == departmentName)
                 .first
                 .id,
-            supervisor.id,
+            null,
             stage!,
             yearOfAdmission.year,
             yearOfGraduation?.year,
             graduationIndicator);
-        if (student.id > -1 && workName.text != '' && workType != null) {
-          await _worksRepositoryImpl.createWork(workName.text, student.id,
-              workType!, assessment, workDueDateText.text);
-        }
+      } else {
+        repositry.createStudent(
+            getFullName(surname.text, firstName.text, fatherName.text),
+            group.text,
+            int.parse(studNum.text),
+            null,
+            null,
+            stage!,
+            yearOfAdmission.year,
+            yearOfGraduation?.year,
+            graduationIndicator);
       }
-    } else if (faculty != null &&
-        departmentName != null &&
-        faculty != Dictionary.nonChose &&
-        departmentName != Dictionary.nonChose) {
-      await repositry.createStudent(
-          getFullName(surname.text, firstName.text, fatherName.text),
-          group.text,
-          int.parse(studNum.text),
-          departments
-              .where((element) => element.departmentName == departmentName)
-              .first
-              .id,
-          null,
-          stage!,
-          yearOfAdmission.year,
-          yearOfGraduation?.year,
-          graduationIndicator);
-    } else {
-      repositry.createStudent(
-          getFullName(surname.text, firstName.text, fatherName.text),
-          group.text,
-          int.parse(studNum.text),
-          null,
-          null,
-          stage!,
-          yearOfAdmission.year,
-          yearOfGraduation?.year,
-          graduationIndicator);
+      await _homeScreenController.getData();
+      _homeScreenController.update();
+    } catch (error) {
+      throw Exception(error);
     }
-
-    await _homeScreenController.getData();
-    _homeScreenController.update();
   }
 
   //редактирование информации о студенте
   Future<void> updateStudent(StudentModel student) async {
     ScientificSupervisorModel? supervisorModel;
-    if (departmentName != null && departmentName != Dictionary.nonChose) {
-      if (currentSupervisor == null) {
-        //случай если при редактировании научный руководитель еще не вписан
+    try {
+      if (departmentName != null && departmentName != Dictionary.nonChose) {
+        if (currentSupervisor == null) {
+          //случай если при редактировании научный руководитель еще не вписан
 
-        if (equalSupervisor() != null) {
-          //если такой научный руководитель уже существует
-          supervisorModel = equalSupervisor();
+          if (equalSupervisor() != null) {
+            //если такой научный руководитель уже существует
+            supervisorModel = equalSupervisor();
+          } else {
+            if (supervisorSurname.text != '' &&
+                supervisorFirstName.text != '' &&
+                supervisorFatherName.text != '' &&
+                post != null) {
+              //если пользователь вписал данные
+              supervisorModel =
+                  await _supervisorRepositoryImpl.createSupervisor(
+                      getFullName(supervisorSurname.text,
+                          supervisorFirstName.text, supervisorFatherName.text),
+                      post!,
+                      academicDegree!,
+                      departments
+                          .where((element) =>
+                              element.departmentName == departmentName)
+                          .first
+                          .id);
+            }
+          }
+
+          if (workName.text != '' && workType != null) {
+            // если данные о научной работе заполнены то создаем
+            await _worksRepositoryImpl.createWork(workName.text, student.id,
+                workType!, assessment, workDueDateText.text);
+          }
         } else {
-          if (supervisorSurname.text != '' &&
+          //cлучай если при редактировании научный руководитель уже вписан
+
+          //но пользователь очистил данные о нем
+          if (supervisorSurname.text == '' &&
+              supervisorFirstName.text == '' &&
+              supervisorFatherName.text == '' &&
+              post == null) {
+            supervisorModel = null;
+            if (currentWork != null) {
+              await _worksRepositoryImpl.deleteWork(currentWork!.id);
+            }
+          } else if (supervisorSurname.text != '' &&
               supervisorFirstName.text != '' &&
               supervisorFatherName.text != '' &&
               post != null) {
-            //если пользователь вписал данные
-            supervisorModel = await _supervisorRepositoryImpl.createSupervisor(
-                getFullName(supervisorSurname.text, supervisorFirstName.text,
-                    supervisorFatherName.text),
-                post!,
-                academicDegree!,
-                departments
-                    .where(
-                        (element) => element.departmentName == departmentName)
-                    .first
-                    .id);
-          }
-        }
-
-        if (workName.text != '' && workType != null) {
-          // если данные о научной работе заполнены то создаем
-          await _worksRepositoryImpl.createWork(workName.text, student.id,
-              workType!, assessment, workDueDateText.text);
-        }
-      } else {
-        //cлучай если при редактировании научный руководитель уже вписан
-
-        //но пользователь очистил данные о нем
-        if (supervisorSurname.text == '' &&
-            supervisorFirstName.text == '' &&
-            supervisorFatherName.text == '' &&
-            post == null) {
-          supervisorModel = null;
-          if (currentWork != null) {
-            await _worksRepositoryImpl.deleteWork(currentWork!.id);
-          }
-        } else if (supervisorSurname.text != '' &&
-            supervisorFirstName.text != '' &&
-            supervisorFatherName.text != '' &&
-            post != null) {
-          //cлучай если при редактировании научный руководитель уже вписан,но пользователь поменял его на другого
-          if (equalSupervisor() != null) {
-            supervisorModel = equalSupervisor()!;
-          } else {
-            supervisorModel = await _supervisorRepositoryImpl.createSupervisor(
-                getFullName(supervisorSurname.text, supervisorFirstName.text,
-                    supervisorFatherName.text),
-                post!,
-                academicDegree!,
-                departments
-                    .where(
-                        (element) => element.departmentName == departmentName)
-                    .first
-                    .id);
-          }
-          if (currentWork != null) {
-            if (workName.text == '') {
-              await _worksRepositoryImpl.deleteWork(currentWork!.id);
+            //cлучай если при редактировании научный руководитель уже вписан,но пользователь поменял его на другого
+            if (equalSupervisor() != null) {
+              supervisorModel = equalSupervisor()!;
             } else {
-              //если научная работа есть то редактируем
-              await _worksRepositoryImpl.editWork(
-                  currentWork!.id,
-                  workName.text,
-                  student.id,
-                  workType!,
-                  assessment,
-                  workDueDateText.text);
+              supervisorModel =
+                  await _supervisorRepositoryImpl.createSupervisor(
+                      getFullName(supervisorSurname.text,
+                          supervisorFirstName.text, supervisorFatherName.text),
+                      post!,
+                      academicDegree!,
+                      departments
+                          .where((element) =>
+                              element.departmentName == departmentName)
+                          .first
+                          .id);
             }
-          } else {
-            //если научной работы нет то создаем
-            if (workName.text != '' && workType != null) {
-              await _worksRepositoryImpl.createWork(workName.text, student.id,
-                  workType!, assessment, workDueDateText.text);
+            if (currentWork != null) {
+              if (workName.text == '') {
+                await _worksRepositoryImpl.deleteWork(currentWork!.id);
+              } else {
+                //если научная работа есть то редактируем
+                await _worksRepositoryImpl.editWork(
+                    currentWork!.id,
+                    workName.text,
+                    student.id,
+                    workType!,
+                    assessment,
+                    workDueDateText.text);
+              }
+            } else {
+              //если научной работы нет то создаем
+              if (workName.text != '' && workType != null) {
+                await _worksRepositoryImpl.createWork(workName.text, student.id,
+                    workType!, assessment, workDueDateText.text);
+              }
             }
           }
         }
+        await repositry.editStudent(
+            student.id,
+            getFullName(surname.text, firstName.text, fatherName.text),
+            group.text,
+            int.parse(studNum.text),
+            departments
+                .where((element) => element.departmentName == departmentName)
+                .first
+                .id,
+            supervisorModel?.id,
+            stage!,
+            yearOfAdmission.year,
+            yearOfGraduation?.year,
+            graduationIndicator);
+      } else {
+        await repositry.editStudent(
+            student.id,
+            getFullName(surname.text, firstName.text, fatherName.text),
+            group.text,
+            int.parse(studNum.text),
+            null,
+            null,
+            stage!,
+            yearOfAdmission.year,
+            yearOfGraduation?.year,
+            graduationIndicator);
       }
-      await repositry.editStudent(
-          student.id,
-          getFullName(surname.text, firstName.text, fatherName.text),
-          group.text,
-          int.parse(studNum.text),
-          departments
-              .where((element) => element.departmentName == departmentName)
-              .first
-              .id,
-          supervisorModel?.id,
-          stage!,
-          yearOfAdmission.year,
-          yearOfGraduation?.year,
-          graduationIndicator);
-    } else {
-      await repositry.editStudent(
-          student.id,
-          getFullName(surname.text, firstName.text, fatherName.text),
-          group.text,
-          int.parse(studNum.text),
-          null,
-          null,
-          stage!,
-          yearOfAdmission.year,
-          yearOfGraduation?.year,
-          graduationIndicator);
+      _homeScreenController.getData();
+      _homeScreenController.update();
+    } catch (error) {
+      throw Exception(error);
     }
-    _homeScreenController.getData();
-    _homeScreenController.update();
   }
 
   void fillCurrentModels(StudentModel student) {
@@ -645,4 +662,10 @@ class AddUpdateController extends GetxController {
       return false;
     }
   }
+
+  void updateServiceAvalibility(bool value){
+    serviceAvaliable = value;
+    update();
+  }
+  
 }

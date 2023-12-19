@@ -1,100 +1,141 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:students_list/presentation/controllers/home_page_controller.dart';
 import 'package:students_list/presentation/pages/home_page/components/header.dart';
+import 'package:students_list/presentation/pages/home_page/components/table.dart';
 import 'package:students_list/presentation/styles_and_colors/colors.dart';
 import 'package:students_list/presentation/styles_and_colors/dictionary.dart';
 import 'package:students_list/presentation/styles_and_colors/styles.dart';
-import 'package:students_list/presentation/widgets/customizable_table.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static final homeScreenController = Get.find<HomePageController>();
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  static final homePageController = Get.find<HomePageController>();
+
+  get developer => null;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen(homePageController.updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    if (result == ConnectivityResult.ethernet ||
+        result == ConnectivityResult.wifi ||
+        result == ConnectivityResult.none) {
+      return homePageController.updateConnectionStatus(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: homeScreenController.getData(),
+      future: homePageController.getData(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: SizedBox(
-              width: 100,
-              height: 20,
-              child: LinearProgressIndicator(
-                color: ThemeColors.textColorPrimary,
-              ),
-            ),
-          );
-        } else {
-          return Scaffold(
-            backgroundColor: ThemeColors.backgroundPrimary,
-            body: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 32, 30, 32),
-              child: Column(
-                children: [
-                  const Header(),
-                  const SizedBox(
-                    height: 15,
+        return GetBuilder(
+          init: homePageController,
+          builder: (controller) {
+            if (homePageController.connectionStatus ==
+                ConnectivityResult.none) {
+              return Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Center(
+                  child: Text(
+                    Dictionary.noInternet,
+                    style: TextStyles.header
+                        .copyWith(color: ThemeColors.textColorPrimary),
                   ),
-                  const Divider(
-                    height: 1,
-                    color: ThemeColors.dividerColor,
-                  ),
-                  const SizedBox(
-                    height: 18,
-                  ),
-                  Expanded(
-                    child: GetBuilder(
-                      init: homeScreenController,
-                      builder: (controller) => CustomizableTable(
-                        fieldsDecoration: BoxDecoration(
-                          color: ThemeColors.backgroundSecondary,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeColors.hintTextColor.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 7,
-                              offset: const Offset(5, 5),
-                            ),
-                          ],
-                        ),
-                        rowsDecoration: BoxDecoration(
-                          color: ThemeColors.backgroundSecondary,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ThemeColors.hintTextColor.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 7,
-                              offset: const Offset(5, 5),
-                            ),
-                          ],
-                        ),
-                        fieldsTextStyle: TextStyles.mainText.copyWith(
-                            color: ThemeColors.textColorPrimary,
-                            fontWeight: FontWeight.w600),
-                        fields: Dictionary.fields,
-                        fieldsMargin: 10,
-                        rowsData: controller.rows,
-                        data: homeScreenController.data,
-                        rowDataTextStyle: TextStyles.mainText
-                            .copyWith(color: ThemeColors.textColorPrimary),
-                        deleteRow: controller.deleteStudent,
-                      ),
+                ),
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Center(
+                  child: SizedBox(
+                    width: 100,
+                    height: 20,
+                    child: LinearProgressIndicator(
+                      color: ThemeColors.textColorPrimary,
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        }
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Center(
+                  child: Text(
+                    Dictionary.serviceIsNotAvaliable,
+                    style: TextStyles.header
+                        .copyWith(color: ThemeColors.textColorPrimary),
+                  ),
+                ),
+              );
+            } else {
+              return const Scaffold(
+                backgroundColor: ThemeColors.backgroundPrimary,
+                body: Padding(
+                  padding: EdgeInsets.fromLTRB(30, 32, 30, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Header(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Divider(
+                        height: 1,
+                        color: ThemeColors.dividerColor,
+                      ),
+                      SizedBox(
+                        height: 18,
+                      ),
+                      HomePageTable(),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
+        );
       },
     );
   }
 }
-
-
-
-

@@ -21,12 +21,7 @@ class SupervisorInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.fullName,
                 style: TextStyles.mainText
@@ -35,12 +30,7 @@ class SupervisorInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 supervisor.fullName,
                 style: TextStyles.mainText
@@ -53,12 +43,7 @@ class SupervisorInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.post,
                 style: TextStyles.mainText
@@ -67,12 +52,7 @@ class SupervisorInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 supervisor.post,
                 style: TextStyles.mainText
@@ -85,12 +65,7 @@ class SupervisorInfoView extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 Dictionary.academicDegreeTable,
                 style: TextStyles.mainText
@@ -99,12 +74,7 @@ class SupervisorInfoView extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(21, 14, 21, 14),
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: ThemeColors.textColorPrimary),
-                  left: BorderSide(color: ThemeColors.textColorPrimary),
-                ),
-              ),
+              
               child: Text(
                 supervisor.academicDegree ?? '',
                 style: TextStyles.mainText

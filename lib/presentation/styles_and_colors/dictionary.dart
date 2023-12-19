@@ -90,4 +90,7 @@ class Dictionary {
   static const String nonDegree = 'Отсутствует';
   static const String candidate = 'Кандидат наук';
   static const String doctor = 'Доктор наук';
+  static const String update = 'Обновить';
+  static const String noInternet = 'Нет подключения к интернету. Попробуйте позже.';
+  static const String serviceIsNotAvaliable = 'Сервис недоступен. Попробуйте перезагрузить страницу.';
 }

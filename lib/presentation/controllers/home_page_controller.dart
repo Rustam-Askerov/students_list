@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/datasources/students_list_remote_datasource.dart';
@@ -20,6 +21,14 @@ class HomePageController extends GetxController {
   Rx<YearOfGraduation> yearOfGraduation = YearOfGraduation.none.obs;
   Rx<StudyingIndicationFilter> studyingIndication =
       StudyingIndicationFilter.none.obs;
+
+  ConnectivityResult connectionStatus = ConnectivityResult.none;
+
+  Future<void> updateConnectionStatus(ConnectivityResult result) async {
+    connectionStatus = result;
+    update();
+  }
+
   void search() {
     data = models
         .where((element) =>
@@ -39,15 +48,19 @@ class HomePageController extends GetxController {
   }
 
   Future<List<StudentModel>> getData() async {
-    models = await _studentsListRepositoryImpl.getStudents();
-    if (searchController.text != '') {
-      search();
-    } else {
-      data = models;
-      rows = getRows().reversed.toList();
+    try {
+      models = await _studentsListRepositoryImpl.getStudents();
+      if (searchController.text != '') {
+        search();
+      } else {
+        data = models;
+        rows = getRows().reversed.toList();
+      }
+      update();
+      return models;
+    } catch (error) {
+      throw Exception(error);
     }
-    update();
-    return models;
   }
 
   Future<void> deleteStudent(int index) async {
