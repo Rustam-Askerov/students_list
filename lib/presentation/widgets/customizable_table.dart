@@ -151,7 +151,8 @@ class _CustomizableTableState extends State<CustomizableTable> {
                                             (widget.rowsData.length / 8).ceil()
                                         ? 8
                                         : widget.rowsData.length -
-                                            (_tableController.currentPage.value -
+                                            (_tableController
+                                                        .currentPage.value -
                                                     1) *
                                                 8
                                     : 0,
@@ -325,12 +326,8 @@ class Fields extends StatelessWidget {
                           },
                           child: GestureDetector(
                             onHorizontalDragUpdate: (details) {
-                              if (details.localPosition.dx > 150) {
-                                _tableController.updateColumnWidth(
-                                    details.localPosition.dx, index);
-                              } else {
-                                _tableController.updateColumnWidth(150, index);
-                              }
+                              _tableController.updateColumnWidth(
+                                  details.delta.dx, index);
                             },
                             child: Obx(
                               () => AnimatedContainer(

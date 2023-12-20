@@ -10,21 +10,23 @@ class CustomizableTableController extends GetxController {
 
   void columnWidthInit(int num) {
     columnWidth = List<double>.filled(num, 150);
-    columnWidth[0]=80;
+    columnWidth[0] = 80;
   }
 
-  void updateColumnWidth(double newWidth, int index) {
-    columnWidth[index] = newWidth;
-    update();
+  void updateColumnWidth(double delta, int index) {
+    if (columnWidth[index] > 50 || delta > 0) {
+      columnWidth[index] += delta;
+      update();
+    }
   }
 
-  void updatePageIndex(int index,int pageCount){
-    if (currentPage>0 && currentPage<=pageCount){
+  void updatePageIndex(int index, int pageCount) {
+    if (currentPage > 0 && currentPage <= pageCount) {
       currentPage.value = index;
     }
     update();
   }
-  
+
   void nextPreviousPage(bool next, int pageCount) {
     if (next) {
       if (currentPage.value < pageCount) {
@@ -32,9 +34,9 @@ class CustomizableTableController extends GetxController {
         update();
       }
     } else {
-      if (currentPage.value!=1){
-      currentPage.value--;
-      update();
+      if (currentPage.value != 1) {
+        currentPage.value--;
+        update();
       }
     }
   }

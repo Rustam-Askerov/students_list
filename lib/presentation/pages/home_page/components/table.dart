@@ -13,45 +13,50 @@ class HomePageTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: CustomizableTable(
-          getData: () async {
-            await homePageController.getData();
-          },
-          fieldsDecoration: BoxDecoration(
-            color: ThemeColors.backgroundSecondary,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: ThemeColors.hintTextColor.withOpacity(0.3),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: const Offset(5, 5),
-              ),
-            ],
-          ),
-          rowsDecoration: BoxDecoration(
-            color: ThemeColors.backgroundSecondary,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: ThemeColors.hintTextColor.withOpacity(0.3),
-                spreadRadius: 1,
-                blurRadius: 7,
-                offset: const Offset(5, 5),
-              ),
-            ],
-          ),
-          fieldsTextStyle: TextStyles.mainText.copyWith(
-              color: ThemeColors.textColorPrimary, fontWeight: FontWeight.w600),
-          fields: Dictionary.fields,
-          fieldsMargin: 10,
-          rowsData: homePageController.rows,
-          data: homePageController.data,
-          rowDataTextStyle:
-              TextStyles.mainText.copyWith(color: ThemeColors.textColorPrimary),
-          deleteRow: homePageController.deleteStudent,
-        ),
-      
+      child: GetBuilder(
+        init: homePageController,
+        builder: (controller) {
+          return CustomizableTable(
+            getData: () async {
+              await homePageController.getData();
+            },
+            fieldsDecoration: BoxDecoration(
+              color: ThemeColors.backgroundSecondary,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: ThemeColors.hintTextColor.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(5, 5),
+                ),
+              ],
+            ),
+            rowsDecoration: BoxDecoration(
+              color: ThemeColors.backgroundSecondary,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: ThemeColors.hintTextColor.withOpacity(0.3),
+                  spreadRadius: 1,
+                  blurRadius: 7,
+                  offset: const Offset(5, 5),
+                ),
+              ],
+            ),
+            fieldsTextStyle: TextStyles.mainText.copyWith(
+                color: ThemeColors.textColorPrimary,
+                fontWeight: FontWeight.w600),
+            fields: Dictionary.fields,
+            fieldsMargin: 10,
+            rowsData: homePageController.rows,
+            data: homePageController.data,
+            rowDataTextStyle: TextStyles.mainText
+                .copyWith(color: ThemeColors.textColorPrimary),
+            deleteRow: homePageController.deleteStudent,
+          );
+        },
+      ),
     );
   }
 }

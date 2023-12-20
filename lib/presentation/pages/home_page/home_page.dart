@@ -66,76 +66,61 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: homePageController.getData(),
-      builder: (context, snapshot) {
-        return GetBuilder(
-          init: homePageController,
-          builder: (controller) {
-            if (homePageController.connectionStatus ==
-                ConnectivityResult.none) {
-              return Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Center(
-                  child: Text(
-                    Dictionary.noInternet,
-                    style: TextStyles.header
-                        .copyWith(color: ThemeColors.textColorPrimary),
-                  ),
+    return Scaffold(
+      backgroundColor: ThemeColors.backgroundPrimary,
+      body: FutureBuilder(
+        future: homePageController.getData(),
+        builder: (context, snapshot) {
+          if (homePageController.connectionStatus == ConnectivityResult.none) {
+            return Center(
+              child: Text(
+                Dictionary.noInternet,
+                style: TextStyles.header
+                    .copyWith(color: ThemeColors.textColorPrimary),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: SizedBox(
+                width: 100,
+                height: 20,
+                child: LinearProgressIndicator(
+                  color: ThemeColors.textColorPrimary,
                 ),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Center(
-                  child: SizedBox(
-                    width: 100,
-                    height: 20,
-                    child: LinearProgressIndicator(
-                      color: ThemeColors.textColorPrimary,
-                    ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                Dictionary.serviceIsNotAvaliable,
+                style: TextStyles.header
+                    .copyWith(color: ThemeColors.textColorPrimary),
+              ),
+            );
+          } else {
+            return const Padding(
+              padding: EdgeInsets.fromLTRB(30, 32, 30, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Header(),
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Center(
-                  child: Text(
-                    Dictionary.serviceIsNotAvaliable,
-                    style: TextStyles.header
-                        .copyWith(color: ThemeColors.textColorPrimary),
+                  Divider(
+                    height: 1,
+                    color: ThemeColors.dividerColor,
                   ),
-                ),
-              );
-            } else {
-              return const Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Padding(
-                  padding: EdgeInsets.fromLTRB(30, 32, 30, 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Header(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Divider(
-                        height: 1,
-                        color: ThemeColors.dividerColor,
-                      ),
-                      SizedBox(
-                        height: 18,
-                      ),
-                      HomePageTable(),
-                    ],
+                  SizedBox(
+                    height: 18,
                   ),
-                ),
-              );
-            }
-          },
-        );
-      },
+                  HomePageTable(),
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
