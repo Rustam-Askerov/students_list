@@ -176,47 +176,53 @@ class ScientificWork extends StatelessWidget {
                       style: TextStyles.hintText.copyWith(
                           color: ThemeColors.hintTextColor, fontSize: 14),
                     ),
-                    items: _addUpdateController.workType!=null ||  _addUpdateController.workType!=Dictionary.nonChose ? [
-                      DropdownMenuItem(
-                        value: Dictionary.dontExists,
-                        child: Text(
-                          Dictionary.dontExists,
-                          style:
-                              TextStyles.mainText.copyWith(color: Colors.grey),
-                        ),
-                      ),
-                      const DropdownMenuItem(
-                        value: Dictionary.greate,
-                        child: Text(
-                          Dictionary.greate,
-                          style: TextStyles.mainText,
-                        ),
-                      ),
-                      const DropdownMenuItem(
-                        value: Dictionary.good,
-                        child: Text(
-                          Dictionary.good,
-                          style: TextStyles.mainText,
-                        ),
-                      ),
-                      const DropdownMenuItem(
-                        value: Dictionary.satisfactorily,
-                        child: Text(
-                          Dictionary.satisfactorily,
-                          style: TextStyles.mainText,
-                        ),
-                      ),
-                    ] : [
-                      DropdownMenuItem(
-                        value: Dictionary.dontExists,
-                        child: Text(
-                          Dictionary.dontExists,
-                          style:
-                              TextStyles.mainText.copyWith(color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                    value: _addUpdateController.workType!=null ||  _addUpdateController.workType!=Dictionary.nonChose? _addUpdateController.assessment : Dictionary.dontExists,
+                    items: _addUpdateController.workType != null &&
+                            _addUpdateController.workType != Dictionary.nonChose
+                        ? [
+                            DropdownMenuItem(
+                              value: Dictionary.dontExists,
+                              child: Text(
+                                Dictionary.dontExists,
+                                style: TextStyles.mainText
+                                    .copyWith(color: Colors.grey),
+                              ),
+                            ),
+                            const DropdownMenuItem(
+                              value: Dictionary.greate,
+                              child: Text(
+                                Dictionary.greate,
+                                style: TextStyles.mainText,
+                              ),
+                            ),
+                            const DropdownMenuItem(
+                              value: Dictionary.good,
+                              child: Text(
+                                Dictionary.good,
+                                style: TextStyles.mainText,
+                              ),
+                            ),
+                            const DropdownMenuItem(
+                              value: Dictionary.satisfactorily,
+                              child: Text(
+                                Dictionary.satisfactorily,
+                                style: TextStyles.mainText,
+                              ),
+                            ),
+                          ]
+                        : [
+                            DropdownMenuItem(
+                              value: Dictionary.dontExists,
+                              child: Text(
+                                Dictionary.dontExists,
+                                style: TextStyles.mainText
+                                    .copyWith(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                    value: _addUpdateController.workType != null &&
+                            _addUpdateController.workType != Dictionary.nonChose
+                        ? _addUpdateController.assessment
+                        : Dictionary.dontExists,
                     onChanged: _addUpdateController.updateWorkMark),
               ),
             ],

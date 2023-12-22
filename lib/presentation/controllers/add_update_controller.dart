@@ -475,7 +475,7 @@ class AddUpdateController extends GetxController {
   }
 
   void updateWorkMark(String? value) {
-    if (workType != null) {
+    if (workType != null && workType != Dictionary.nonChose) {
       assessment = value!;
       update();
     }
@@ -483,6 +483,9 @@ class AddUpdateController extends GetxController {
 
   void updateWorkType(String? value) {
     workType = value;
+    if (value == Dictionary.nonChose) {
+      assessment = null;
+    }
     update();
   }
 
