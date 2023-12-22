@@ -475,8 +475,10 @@ class AddUpdateController extends GetxController {
   }
 
   void updateWorkMark(String? value) {
-    assessment = value!;
-    update();
+    if (workType != null) {
+      assessment = value!;
+      update();
+    }
   }
 
   void updateWorkType(String? value) {
@@ -669,7 +671,8 @@ class AddUpdateController extends GetxController {
             (workName.text != '' &&
                 workDueDate == null &&
                 workType != null &&
-                assessment == null) || (workName.text != '' &&
+                assessment == null) ||
+            (workName.text != '' &&
                 workDueDate != null &&
                 workType != null &&
                 assessment != null))) {

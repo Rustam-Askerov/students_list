@@ -176,7 +176,7 @@ class ScientificWork extends StatelessWidget {
                       style: TextStyles.hintText.copyWith(
                           color: ThemeColors.hintTextColor, fontSize: 14),
                     ),
-                    items: [
+                    items: _addUpdateController.workType!=null ? [
                       DropdownMenuItem(
                         value: Dictionary.dontExists,
                         child: Text(
@@ -206,8 +206,17 @@ class ScientificWork extends StatelessWidget {
                           style: TextStyles.mainText,
                         ),
                       ),
+                    ] : [
+                      DropdownMenuItem(
+                        value: Dictionary.dontExists,
+                        child: Text(
+                          Dictionary.dontExists,
+                          style:
+                              TextStyles.mainText.copyWith(color: Colors.grey),
+                        ),
+                      ),
                     ],
-                    value: _addUpdateController.assessment,
+                    value: _addUpdateController.workType!=null ? _addUpdateController.assessment : Dictionary.dontExists,
                     onChanged: _addUpdateController.updateWorkMark),
               ),
             ],
