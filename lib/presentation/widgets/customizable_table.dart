@@ -13,6 +13,7 @@ import 'package:students_list/presentation/styles_and_colors/styles.dart';
 
 final CustomizableTableController _tableController =
     Get.find<CustomizableTableController>();
+final HomePageController _homePageController = Get.find<HomePageController>();
 
 class CustomizableTable extends StatefulWidget {
   const CustomizableTable({
@@ -95,7 +96,9 @@ class _CustomizableTableState extends State<CustomizableTable> {
                           ThemeColors.backgroundSecondary),
                     ),
                     onPressed: () async {
-                      await widget.getData();
+                      _homePageController.updateIsLoading(true);
+                      await _homePageController.getData();
+                      _homePageController.updateIsLoading(false);
                     },
                     child: IntrinsicWidth(
                       child: Container(
@@ -129,55 +132,79 @@ class _CustomizableTableState extends State<CustomizableTable> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 controller: ScrollController(),
-                child: Column(
-                  children: [
-                    Fields(
-                        fields: widget.fields,
-                        fieldsDecoration: widget.fieldsDecoration,
-                        fieldsTextStyle: widget.fieldsTextStyle,
-                        rowsMargin: widget.rowsMargin,
-                        fieldsMargin: widget.fieldsMargin),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        controller: ScrollController(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Column(
-                            children: [
-                              ...List.generate(
-                                widget.rowsData.isNotEmpty
-                                    ? _tableController.currentPage.value !=
-                                            (widget.rowsData.length / 8).ceil()
-                                        ? 8
-                                        : widget.rowsData.length -
-                                            (_tableController
-                                                        .currentPage.value -
-                                                    1) *
-                                                8
-                                    : 0,
-                                (index) => TableRow(
-                                  rowData: widget.rowsData[
-                                      (_tableController.currentPage.value - 1) *
-                                              8 +
-                                          index],
-                                  rowsDecoration: widget.rowsDecoration,
-                                  rowDataTextStyle: widget.rowDataTextStyle,
-                                  filedsMargin: widget.fieldsMargin,
-                                  rowsMargin: widget.rowsMargin,
-                                  deleteRow: widget.deleteRow,
-                                  rowIndex:
-                                      (_tableController.currentPage.value - 1) *
-                                              8 +
-                                          index,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Column(
+                    children: [
+                      Fields(
+                          fields: widget.fields,
+                          fieldsDecoration: widget.fieldsDecoration,
+                          fieldsTextStyle: widget.fieldsTextStyle,
+                          rowsMargin: widget.rowsMargin,
+                          fieldsMargin: widget.fieldsMargin),
+                      Obx(
+                        () {
+                          if (_homePageController.isLoading.value) {
+                            return const Expanded(
+                              child:  Center(
+                                child: SizedBox(
+                                  width: 100,
+                                  height: 20,
+                                  child: LinearProgressIndicator(
+                                    color: ThemeColors.textColorPrimary,
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                            );
+                          } else {
+                            return Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                controller: ScrollController(),
+                                child: Column(
+                                  children: [
+                                    ...List.generate(
+                                      widget.rowsData.isNotEmpty
+                                          ? _tableController
+                                                      .currentPage.value !=
+                                                  (widget.rowsData.length / 8)
+                                                      .ceil()
+                                              ? 8
+                                              : widget.rowsData.length -
+                                                  (_tableController.currentPage
+                                                              .value -
+                                                          1) *
+                                                      8
+                                          : 0,
+                                      (index) => TableRow(
+                                        rowData: widget.rowsData[
+                                            (_tableController
+                                                            .currentPage.value -
+                                                        1) *
+                                                    8 +
+                                                index],
+                                        rowsDecoration: widget.rowsDecoration,
+                                        rowDataTextStyle:
+                                            widget.rowDataTextStyle,
+                                        filedsMargin: widget.fieldsMargin,
+                                        rowsMargin: widget.rowsMargin,
+                                        deleteRow: widget.deleteRow,
+                                        rowIndex: (_tableController
+                                                        .currentPage.value -
+                                                    1) *
+                                                8 +
+                                            index,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -195,79 +222,83 @@ class Pagination extends StatelessWidget {
   final Decoration boxDecoration;
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.only(bottom: 16),
-        decoration: boxDecoration,
-        child: Row(
-          children: [
-            Text(
-              '${_tableController.currentPage} cтраница из $pages ',
-              style: TextStyles.hintText.copyWith(
-                color: ThemeColors.textColorPrimary,
-              ),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            InkWell(
-              onTap: () {
-                _tableController.nextPreviousPage(false, pages);
-              },
-              child: const Icon(
-                Icons.arrow_left,
-                size: 32,
-              ),
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            SizedBox(
-              height: 30,
-              width: 75,
-              child: TextFormField(
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                decoration: InputDecoration(
-                  contentPadding:
-                      const EdgeInsets.only(bottom: 14, left: 7, right: 7),
-                  labelStyle: TextStyles.mainText
-                      .copyWith(color: ThemeColors.hintTextColor),
-                  filled: true,
-                  fillColor: ThemeColors.backgroundPrimary,
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: ThemeColors.textColorPrimary,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: ThemeColors.textColorPrimary,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+    return GetBuilder(
+      init: _tableController,
+      builder: (controller) => IntrinsicWidth(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: boxDecoration,
+          child: Row(
+            children: [
+              Text(
+                '${_tableController.currentPage} cтраница из $pages ',
+                style: TextStyles.hintText.copyWith(
+                  color: ThemeColors.textColorPrimary,
                 ),
-                onFieldSubmitted: (String text) {
-                  _tableController.updatePageIndex(int.parse(text), pages);
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              InkWell(
+                onTap: () {
+                  _tableController.nextPreviousPage(false, pages);
                 },
+                child: const Icon(
+                  Icons.arrow_left,
+                  size: 32,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 8,
-            ),
-            InkWell(
-              onTap: () {
-                _tableController.nextPreviousPage(true, pages);
-              },
-              child: const Icon(
-                Icons.arrow_right,
-                size: 32,
+              const SizedBox(
+                width: 8,
               ),
-            ),
-          ],
+              SizedBox(
+                height: 30,
+                width: 75,
+                child: TextFormField(
+                  controller: _tableController.paginationController,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  decoration: InputDecoration(
+                    contentPadding:
+                        const EdgeInsets.only(bottom: 14, left: 7, right: 7),
+                    labelStyle: TextStyles.mainText
+                        .copyWith(color: ThemeColors.hintTextColor),
+                    filled: true,
+                    fillColor: ThemeColors.backgroundPrimary,
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: ThemeColors.textColorPrimary,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: ThemeColors.textColorPrimary,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onFieldSubmitted: (String text) {
+                    _tableController.updatePageIndex(int.parse(text), pages);
+                  },
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              InkWell(
+                onTap: () {
+                  _tableController.nextPreviousPage(true, pages);
+                },
+                child: const Icon(
+                  Icons.arrow_right,
+                  size: 32,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

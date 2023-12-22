@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/datasources/students_list_remote_datasource.dart';
@@ -22,12 +21,7 @@ class HomePageController extends GetxController {
   Rx<StudyingIndicationFilter> studyingIndication =
       StudyingIndicationFilter.none.obs;
 
-  ConnectivityResult connectionStatus = ConnectivityResult.none;
-
-  Future<void> updateConnectionStatus(ConnectivityResult result) async {
-    connectionStatus = result;
-    update();
-  }
+  Rx<bool> isLoading = false.obs;
 
   void search() {
     data = models
@@ -45,6 +39,10 @@ class HomePageController extends GetxController {
         .toList();
     rows = getRows().reversed.toList();
     update();
+  }
+
+  void updateIsLoading(bool value){
+    isLoading.value = value;
   }
 
   Future<List<StudentModel>> getData() async {

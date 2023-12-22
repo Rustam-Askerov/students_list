@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class CustomizableTableController extends GetxController {
@@ -7,7 +8,7 @@ class CustomizableTableController extends GetxController {
   RxBool onHover = false.obs;
   RxInt onHoverIndex = (-1).obs;
   RxInt currentPage = 1.obs;
-
+  TextEditingController paginationController = TextEditingController();
   void columnWidthInit(int num) {
     columnWidth = List<double>.filled(num, 150);
     columnWidth[0] = 80;
@@ -21,8 +22,16 @@ class CustomizableTableController extends GetxController {
   }
 
   void updatePageIndex(int index, int pageCount) {
-    if (currentPage > 0 && currentPage <= pageCount) {
+    if (index > 0 && index <= pageCount) {
       currentPage.value = index;
+    } else {
+      if (index > pageCount) {
+        currentPage.value = pageCount;
+        paginationController.text = pageCount.toString();
+      }else if(index<1){
+        currentPage.value = 1;
+        paginationController.text = '1';
+      }
     }
     update();
   }
@@ -34,10 +43,8 @@ class CustomizableTableController extends GetxController {
         update();
       }
     } else {
-      if (currentPage.value != 1) {
-        currentPage.value--;
-        update();
-      }
+      if (currentPage.value != 1) currentPage.value--;
+      update();
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:students_list/presentation/controllers/add_update_controller.dart';
 import 'package:students_list/presentation/controllers/home_page_controller.dart';
+import 'package:students_list/presentation/controllers/internet_check_controller.dart';
 import 'package:students_list/presentation/controllers/student_info_page_controller.dart';
 import 'package:students_list/presentation/controllers/table_controller.dart';
 
@@ -11,5 +12,6 @@ class StudListBindings implements Bindings {
     Get.put(CustomizableTableController());
     Get.put(AddUpdateController());
     Get.put(StudentInfoPageController());
+    Get.put(InternetCheckController());
   }
 }

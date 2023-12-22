@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:students_list/data/models/student_model.dart';
 import 'package:students_list/presentation/controllers/add_update_controller.dart';
+import 'package:students_list/presentation/controllers/internet_check_controller.dart';
 import 'package:students_list/presentation/pages/add_update_data_page/components/department_info.dart';
 import 'package:students_list/presentation/pages/add_update_data_page/components/scientific_supervisor_info.dart';
 import 'package:students_list/presentation/pages/add_update_data_page/components/scientific_work_info.dart';
@@ -27,9 +28,9 @@ class AddUpdateDataPage extends StatefulWidget {
 
 class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
   static final _addUpdateController = Get.find<AddUpdateController>();
+  static final internetController = Get.find<InternetCheckController>();
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
   get developer => null;
 
   @override
@@ -69,145 +70,138 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: widget.addUpdate
-          ? _addUpdateController.getDataCreate()
-          : _addUpdateController.getDataUpdate(widget.student!),
-      builder: (context, snapshot) {
-        return GetBuilder<AddUpdateController>(
-          init: _addUpdateController,
-          builder: (controller) {
-            if (_addUpdateController.connectionStatus ==
-                ConnectivityResult.none) {
-              return Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Center(
-                  child: Text(
-                    Dictionary.noInternet,
-                    style: TextStyles.header
-                        .copyWith(color: ThemeColors.textColorPrimary),
-                  ),
-                ),
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: SizedBox(
-                  width: 100,
-                  height: 20,
-                  child: LinearProgressIndicator(
-                    color: ThemeColors.textColorPrimary,
-                  ),
-                ),
-              );
-            } else if (snapshot.hasError ||
-                !_addUpdateController.serviceAvaliable) {
-              return Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: Center(
-                  child: Text(
-                    Dictionary.serviceIsNotAvaliable,
-                    style: TextStyles.header
-                        .copyWith(color: ThemeColors.textColorPrimary),
-                  ),
-                ),
-              );
-            } else {
-              return Scaffold(
-                backgroundColor: ThemeColors.backgroundPrimary,
-                body: SingleChildScrollView(
-                  controller: ScrollController(),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.all(30.0).copyWith(top: 0),
-                      child: Column(
-                        children: [
-                          const IntrinsicWidth(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Flexible(child: StudentInfo()),
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      DepartmentInfo(),
-                                      ScientificSupervisor(),
-                                      ScientificWork(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+    return Scaffold(
+      backgroundColor: ThemeColors.backgroundPrimary,
+      body: FutureBuilder(
+        future: widget.addUpdate
+            ? _addUpdateController.getDataCreate()
+            : _addUpdateController.getDataUpdate(widget.student!),
+        builder: (context, snapshot) {
+          return GetBuilder<AddUpdateController>(
+            init: _addUpdateController,
+            builder: (controller) {
+              return GetBuilder(
+                init: internetController,
+                builder: (controller) {
+                  if (internetController.connectionStatus ==
+                      ConnectivityResult.none) {
+                    return Center(
+                      child: Text(
+                        Dictionary.noInternet,
+                        style: TextStyles.header
+                            .copyWith(color: ThemeColors.textColorPrimary),
+                      ),
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: SizedBox(
+                        width: 100,
+                        height: 20,
+                        child: LinearProgressIndicator(
+                          color: ThemeColors.textColorPrimary,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError ||
+                      !_addUpdateController.serviceAvaliable) {
+                    return Center(
+                      child: Text(
+                        Dictionary.serviceIsNotAvaliable,
+                        style: TextStyles.header
+                            .copyWith(color: ThemeColors.textColorPrimary),
+                      ),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      controller: ScrollController(),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(30.0).copyWith(top: 0),
+                          child: Column(
+                            children: [
+                              const IntrinsicWidth(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(child: StudentInfo()),
+                                    SizedBox(
+                                      width: 25,
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          DepartmentInfo(),
+                                          ScientificSupervisor(),
+                                          ScientificWork(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              backgroundColor: const MaterialStatePropertyAll(
-                                  ThemeColors.backgroundSecondary),
-                              overlayColor: const MaterialStatePropertyAll(
-                                  ThemeColors.backgroundPrimary),
-                              surfaceTintColor: const MaterialStatePropertyAll(
-                                  ThemeColors.backgroundSecondary),
-                            ),
-                            onPressed: () async {
-                              if (widget.addUpdate) {
-                                try {
-                                  await _addUpdateController
-                                      .addStudent()
-                                      .then((value) => Get.back());
-                                } catch (error) {
-                                  if (error.toString().contains('500')) {
-                                    _addUpdateController
-                                        .updateServiceAvalibility(false);
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        elevation: 10,
-                                        backgroundColor:
-                                            ThemeColors.backgroundSecondary,
-                                        content: Text(
-                                          error
-                                              .toString()
-                                              .replaceAll('Exception: ', ''),
-                                          style: TextStyles.header.copyWith(
-                                              color:
-                                                  ThemeColors.textColorPrimary),
-                                        ),
-                                        action: SnackBarAction(
-                                          textColor:
-                                              ThemeColors.textColorPrimary,
-                                          label: 'ОК',
-                                          onPressed: () {
-                                            // Some code to undo the change.
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              } else {
-                                if (_addUpdateController.checkFilledFields()) {
-                                  try {
-                                    await _addUpdateController
-                                        .updateStudent(widget.student!)
-                                        .then((value) => Get.back());
-                                  } catch (error) {
-                                    if (error.toString().contains('500')) {
-                                      _addUpdateController
-                                          .updateServiceAvalibility(false);
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          ThemeColors.backgroundSecondary),
+                                  overlayColor: const MaterialStatePropertyAll(
+                                      ThemeColors.backgroundPrimary),
+                                  surfaceTintColor:
+                                      const MaterialStatePropertyAll(
+                                          ThemeColors.backgroundSecondary),
+                                ),
+                                onPressed: () async {
+                                  if (widget.addUpdate) {
+                                    if (_addUpdateController
+                                        .checkFilledFields()) {
+                                      try {
+                                        await _addUpdateController
+                                            .addStudent()
+                                            .then((value) => Get.back());
+                                      } catch (error) {
+                                        if (error.toString().contains('500')) {
+                                          _addUpdateController
+                                              .updateServiceAvalibility(false);
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              elevation: 10,
+                                              backgroundColor: ThemeColors
+                                                  .backgroundSecondary,
+                                              content: Text(
+                                                error.toString().replaceAll(
+                                                    'Exception: ', ''),
+                                                style: TextStyles.header
+                                                    .copyWith(
+                                                        color: ThemeColors
+                                                            .textColorPrimary),
+                                              ),
+                                              action: SnackBarAction(
+                                                textColor: ThemeColors
+                                                    .textColorPrimary,
+                                                label: 'ОК',
+                                                onPressed: () {
+                                                  // Some code to undo the change.
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
@@ -216,9 +210,69 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
                                           backgroundColor:
                                               ThemeColors.backgroundSecondary,
                                           content: Text(
-                                            error
-                                                .toString()
-                                                .replaceAll('Exception: ', ''),
+                                            'Проверьте корректность и полноту введеных данных.',
+                                            style: TextStyles.header.copyWith(
+                                                color: ThemeColors
+                                                    .textColorPrimary),
+                                          ),
+                                          action: SnackBarAction(
+                                            textColor:
+                                                ThemeColors.textColorPrimary,
+                                            label: 'ОК',
+                                            onPressed: () {
+                                              // Some code to undo the change.
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    if (_addUpdateController
+                                        .checkFilledFields()) {
+                                      try {
+                                        await _addUpdateController
+                                            .updateStudent(widget.student!)
+                                            .then((value) => Get.back());
+                                      } catch (error) {
+                                        if (error.toString().contains('500')) {
+                                          _addUpdateController
+                                              .updateServiceAvalibility(false);
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              elevation: 10,
+                                              backgroundColor: ThemeColors
+                                                  .backgroundSecondary,
+                                              content: Text(
+                                                error.toString().replaceAll(
+                                                    'Exception: ', ''),
+                                                style: TextStyles.header
+                                                    .copyWith(
+                                                        color: ThemeColors
+                                                            .textColorPrimary),
+                                              ),
+                                              action: SnackBarAction(
+                                                textColor: ThemeColors
+                                                    .textColorPrimary,
+                                                label: 'ОК',
+                                                onPressed: () {
+                                                  // Some code to undo the change.
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          elevation: 10,
+                                          backgroundColor:
+                                              ThemeColors.backgroundSecondary,
+                                          content: Text(
+                                            'Проверьте корректность и полноту введеных данных.',
                                             style: TextStyles.header.copyWith(
                                                 color: ThemeColors
                                                     .textColorPrimary),
@@ -235,53 +289,32 @@ class _AddUpdateDataPageState extends State<AddUpdateDataPage> {
                                       );
                                     }
                                   }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      elevation: 10,
-                                      backgroundColor:
-                                          ThemeColors.backgroundSecondary,
-                                      content: Text(
-                                        'Проверьте корректность и полноту введеных данных',
-                                        style: TextStyles.header.copyWith(
-                                            color:
-                                                ThemeColors.textColorPrimary),
-                                      ),
-                                      action: SnackBarAction(
-                                        textColor: ThemeColors.textColorPrimary,
-                                        label: 'ОК',
-                                        onPressed: () {
-                                          // Some code to undo the change.
-                                        },
-                                      ),
+                                },
+                                child: SizedBox(
+                                  height: 50,
+                                  width: 400,
+                                  child: Center(
+                                    child: Text(
+                                      Dictionary.saveInfoAboutStudent,
+                                      style: TextStyles.header.copyWith(
+                                          color: ThemeColors.textColorPrimary),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  );
-                                }
-                              }
-                            },
-                            child: SizedBox(
-                              height: 50,
-                              width: 400,
-                              child: Center(
-                                child: Text(
-                                  Dictionary.saveInfoAboutStudent,
-                                  style: TextStyles.header.copyWith(
-                                      color: ThemeColors.textColorPrimary),
-                                  textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )
-                        ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
+                    );
+                  }
+                },
               );
-            }
-          },
-        );
-      },
+            },
+          );
+        },
+      ),
     );
   }
 }

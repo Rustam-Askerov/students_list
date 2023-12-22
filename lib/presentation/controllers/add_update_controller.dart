@@ -181,7 +181,7 @@ class AddUpdateController extends GetxController {
             yearOfGraduation?.year,
             graduationIndicator);
       } else {
-        repositry.createStudent(
+        await repositry.createStudent(
             getFullName(surname.text, firstName.text, fatherName.text),
             group.text,
             int.parse(studNum.text),
@@ -192,8 +192,7 @@ class AddUpdateController extends GetxController {
             yearOfGraduation?.year,
             graduationIndicator);
       }
-      await _homeScreenController.getData();
-      _homeScreenController.update();
+      _homeScreenController.getData();
     } catch (error) {
       throw Exception(error);
     }
@@ -317,7 +316,6 @@ class AddUpdateController extends GetxController {
             graduationIndicator);
       }
       _homeScreenController.getData();
-      _homeScreenController.update();
     } catch (error) {
       throw Exception(error);
     }
@@ -628,6 +626,21 @@ class AddUpdateController extends GetxController {
         group.text != '' &&
         studNum.text != '' &&
         stage != null &&
+        faculty == null &&
+        departmentName == null &&
+        supervisorSurname.text == '' &&
+        supervisorFirstName.text == '' &&
+        supervisorFatherName.text == '' &&
+        post == null &&
+        academicDegree == null) {
+      return true;
+    } else if (graduationIndicator == null &&
+        surname.text != '' &&
+        firstName.text != '' &&
+        fatherName.text != '' &&
+        group.text != '' &&
+        studNum.text != '' &&
+        stage != null &&
         faculty != null &&
         departmentName != null &&
         supervisorSurname.text == '' &&
@@ -656,16 +669,18 @@ class AddUpdateController extends GetxController {
             (workName.text != '' &&
                 workDueDate == null &&
                 workType != null &&
-                assessment == null))) {
+                assessment == null) || (workName.text != '' &&
+                workDueDate != null &&
+                workType != null &&
+                assessment != null))) {
       return true;
     } else {
       return false;
     }
   }
 
-  void updateServiceAvalibility(bool value){
+  void updateServiceAvalibility(bool value) {
     serviceAvaliable = value;
     update();
   }
-  
 }
