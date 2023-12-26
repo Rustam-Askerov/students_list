@@ -8,7 +8,7 @@ class CustomizableTableController extends GetxController {
   RxBool onHover = false.obs;
   RxInt onHoverIndex = (-1).obs;
   RxInt currentPage = 1.obs;
-  TextEditingController paginationController = TextEditingController();
+  TextEditingController paginationController = TextEditingController(text: '1');
   void columnWidthInit(int num) {
     columnWidth = List<double>.filled(num, 150);
     columnWidth[0] = 80;

@@ -146,7 +146,7 @@ class _CustomizableTableState extends State<CustomizableTable> {
                         () {
                           if (_homePageController.isLoading.value) {
                             return const Expanded(
-                              child:  Center(
+                              child: Center(
                                 child: SizedBox(
                                   width: 100,
                                   height: 20,
@@ -256,6 +256,7 @@ class Pagination extends StatelessWidget {
                 height: 30,
                 width: 75,
                 child: TextFormField(
+                  textAlign: TextAlign.center,
                   controller: _tableController.paginationController,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -500,7 +501,7 @@ class TableRow extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                deleteRow(rowIndex);
+                                _showFilters(context, deleteRow, rowIndex);
                               },
                               child: Image.asset(
                                 'assets/icons/trash.png',
@@ -532,6 +533,158 @@ class TableRow extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showFilters(BuildContext context,
+      Future<void> Function(int id) deleteRow, int rowIndex) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: IntrinsicHeight(
+            child: IntrinsicWidth(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: ThemeColors.backgroundPrimary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      Dictionary.onDeleteText,
+                      style: TextStyles.header
+                          .copyWith(color: ThemeColors.textColorPrimary),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    ThemeColors.hintTextColor.withOpacity(0.3),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              shadowColor: const MaterialStatePropertyAll(
+                                  Colors.transparent),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              backgroundColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundSecondary),
+                              overlayColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundPrimary),
+                              surfaceTintColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundSecondary),
+                            ),
+                            onPressed: () async {
+                              deleteRow(rowIndex);
+                              Get.back();
+                            },
+                            child: IntrinsicWidth(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Text(
+                                  Dictionary.delete,
+                                  style: TextStyles.header.copyWith(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    ThemeColors.hintTextColor.withOpacity(0.3),
+                                spreadRadius: 1,
+                                blurRadius: 7,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              shadowColor: const MaterialStatePropertyAll(
+                                  Colors.transparent),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              backgroundColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundSecondary),
+                              overlayColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundPrimary),
+                              surfaceTintColor: const MaterialStatePropertyAll(
+                                  ThemeColors.backgroundSecondary),
+                            ),
+                            onPressed: () async {
+                              Get.back();
+                            },
+                            child: IntrinsicWidth(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      Dictionary.cancel,
+                                      style: TextStyles.header.copyWith(
+                                        color: ThemeColors.textColorPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Icon(
+                                      Icons.close,
+                                      size: 24,
+                                      color: ThemeColors.hintTextColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

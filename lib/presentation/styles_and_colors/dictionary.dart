@@ -16,7 +16,8 @@ class Dictionary {
   static const String departmentInfo = 'Информация о кафедре';
   static const String scientificAdvisorInfo =
       'Информация о научном руководителе';
-  static const String scientificWorkInfo = 'Информация о научной работе студента';
+  static const String scientificWorkInfo =
+      'Информация о научной работе студента';
   static const String surname = 'Фамилия';
   static const String firstName = 'Имя';
   static const String fatherName = 'Отчество';
@@ -91,6 +92,11 @@ class Dictionary {
   static const String candidate = 'Кандидат наук';
   static const String doctor = 'Доктор наук';
   static const String update = 'Обновить';
-  static const String noInternet = 'Нет подключения к интернету. Попробуйте позже.';
-  static const String serviceIsNotAvaliable = 'Сервис недоступен. Попробуйте перезагрузить страницу.';
+  static const String noInternet =
+      'Нет подключения к интернету. Попробуйте позже.';
+  static const String serviceIsNotAvaliable =
+      'Сервис недоступен. Попробуйте перезагрузить страницу.';
+  static const String onDeleteText = 'Вы действительно хотите удалить запись?';
+  static const String delete = 'Удалить';
+  static const String cancel = 'Отмена';
 }

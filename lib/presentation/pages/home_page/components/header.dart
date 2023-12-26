@@ -191,443 +191,462 @@ class Header extends StatelessWidget {
   }
 }
 
-Future<void> _showFilters(
-    BuildContext context, HomePageController controller) {
+Future<void> _showFilters(BuildContext context, HomePageController controller) {
   return showDialog(
     context: context,
     builder: (context) {
       return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: IntrinsicHeight(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: ThemeColors.backgroundPrimary,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  Dictionary.filters,
-                  style: TextStyles.header
-                      .copyWith(color: ThemeColors.textColorPrimary),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  width: 500,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: ThemeColors.backgroundSecondary,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ThemeColors.hintTextColor.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          child: IntrinsicWidth(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: ThemeColors.backgroundPrimary,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      SizedBox(
+                        height: 24,
+                        width: 24,
+                      ),
                       Text(
-                        Dictionary.alphabet,
-                        style: TextStyles.header.copyWith(
-                          color: ThemeColors.textColorPrimary,
-                        ),
+                        Dictionary.filters,
+                        style: TextStyles.header
+                            .copyWith(color: ThemeColors.textColorPrimary),
                       ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<AlphabetFilter>(
-                              value: AlphabetFilter.up,
-                              groupValue: controller.alphabetFilter.value,
-                              onChanged: (AlphabetFilter? value) {
-                                controller.updateAlphabetValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.up,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<AlphabetFilter>(
-                              value: AlphabetFilter.down,
-                              groupValue: controller.alphabetFilter.value,
-                              onChanged: (AlphabetFilter? value) {
-                                controller.updateAlphabetValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.down,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                      InkWell(
+                        onTap: (){
+                          Get.back();
+                        },
+                        child: Icon(
+                          Icons.close,
+                          size: 24,
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  width: 500,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: ThemeColors.backgroundSecondary,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ThemeColors.hintTextColor.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 16,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Dictionary.yearOfAdmission,
-                        style: TextStyles.header.copyWith(
-                          color: ThemeColors.textColorPrimary,
+                  Container(
+                    width: 500,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: ThemeColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ThemeColors.hintTextColor.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(5, 5),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<YearOfAdmission>(
-                              value: YearOfAdmission.up,
-                              groupValue: controller.yearOfAdmission.value,
-                              onChanged: (YearOfAdmission? value) {
-                                controller.updateYearOfAdmissionValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.up,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Dictionary.alphabet,
+                          style: TextStyles.header.copyWith(
+                            color: ThemeColors.textColorPrimary,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<YearOfAdmission>(
-                              value: YearOfAdmission.down,
-                              groupValue: controller.yearOfAdmission.value,
-                              onChanged: (YearOfAdmission? value) {
-                                controller.updateYearOfAdmissionValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.down,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ),
-                    ],
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<AlphabetFilter>(
+                                value: AlphabetFilter.up,
+                                groupValue: controller.alphabetFilter.value,
+                                onChanged: (AlphabetFilter? value) {
+                                  controller.updateAlphabetValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.up,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<AlphabetFilter>(
+                                value: AlphabetFilter.down,
+                                groupValue: controller.alphabetFilter.value,
+                                onChanged: (AlphabetFilter? value) {
+                                  controller.updateAlphabetValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.down,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  width: 500,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: ThemeColors.backgroundSecondary,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ThemeColors.hintTextColor.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 16,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Dictionary.yearOfGraduation,
-                        style: TextStyles.header.copyWith(
-                          color: ThemeColors.textColorPrimary,
+                  Container(
+                    width: 500,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: ThemeColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ThemeColors.hintTextColor.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(5, 5),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<YearOfGraduation>(
-                              value: YearOfGraduation.up,
-                              groupValue: controller.yearOfGraduation.value,
-                              onChanged: (YearOfGraduation? value) {
-                                controller.updateYearOfGraduationValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.up,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Dictionary.yearOfAdmission,
+                          style: TextStyles.header.copyWith(
+                            color: ThemeColors.textColorPrimary,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<YearOfGraduation>(
-                              value: YearOfGraduation.down,
-                              groupValue: controller.yearOfGraduation.value,
-                              onChanged: (YearOfGraduation? value) {
-                                controller.updateYearOfGraduationValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.down,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ),
-                    ],
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<YearOfAdmission>(
+                                value: YearOfAdmission.up,
+                                groupValue: controller.yearOfAdmission.value,
+                                onChanged: (YearOfAdmission? value) {
+                                  controller.updateYearOfAdmissionValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.up,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<YearOfAdmission>(
+                                value: YearOfAdmission.down,
+                                groupValue: controller.yearOfAdmission.value,
+                                onChanged: (YearOfAdmission? value) {
+                                  controller.updateYearOfAdmissionValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.down,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  width: 500,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: ThemeColors.backgroundSecondary,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ThemeColors.hintTextColor.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 16,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Dictionary.studyingIndication,
-                        style: TextStyles.header.copyWith(
-                          color: ThemeColors.textColorPrimary,
+                  Container(
+                    width: 500,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: ThemeColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ThemeColors.hintTextColor.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(5, 5),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<StudyingIndicationFilter>(
-                              value: StudyingIndicationFilter.inProcess,
-                              groupValue: controller.studyingIndication.value,
-                              onChanged: (StudyingIndicationFilter? value) {
-                                controller
-                                    .updateStudyingIndicationValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.inProcess,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Dictionary.yearOfGraduation,
+                          style: TextStyles.header.copyWith(
+                            color: ThemeColors.textColorPrimary,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<StudyingIndicationFilter>(
-                              value: StudyingIndicationFilter.complete,
-                              groupValue: controller.studyingIndication.value,
-                              onChanged: (StudyingIndicationFilter? value) {
-                                controller
-                                    .updateStudyingIndicationValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.successGraduation,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 16,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Obx(
-                        () => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Radio<StudyingIndicationFilter>(
-                              value: StudyingIndicationFilter.nonComplete,
-                              groupValue: controller.studyingIndication.value,
-                              onChanged: (StudyingIndicationFilter? value) {
-                                controller
-                                    .updateStudyingIndicationValue(value!);
-                                controller.callAllFilters();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              Dictionary.failureGraduation,
-                              style: TextStyles.mainText.copyWith(
-                                  color: ThemeColors.textColorPrimary),
-                            ),
-                          ],
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<YearOfGraduation>(
+                                value: YearOfGraduation.up,
+                                groupValue: controller.yearOfGraduation.value,
+                                onChanged: (YearOfGraduation? value) {
+                                  controller.updateYearOfGraduationValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.up,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<YearOfGraduation>(
+                                value: YearOfGraduation.down,
+                                groupValue: controller.yearOfGraduation.value,
+                                onChanged: (YearOfGraduation? value) {
+                                  controller.updateYearOfGraduationValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.down,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Container(
-                  width: 500,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ThemeColors.hintTextColor.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 7,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 16,
                   ),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shadowColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
+                  Container(
+                    width: 500,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: ThemeColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ThemeColors.hintTextColor.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(5, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Dictionary.studyingIndication,
+                          style: TextStyles.header.copyWith(
+                            color: ThemeColors.textColorPrimary,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<StudyingIndicationFilter>(
+                                value: StudyingIndicationFilter.inProcess,
+                                groupValue: controller.studyingIndication.value,
+                                onChanged: (StudyingIndicationFilter? value) {
+                                  controller
+                                      .updateStudyingIndicationValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.inProcess,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<StudyingIndicationFilter>(
+                                value: StudyingIndicationFilter.complete,
+                                groupValue: controller.studyingIndication.value,
+                                onChanged: (StudyingIndicationFilter? value) {
+                                  controller
+                                      .updateStudyingIndicationValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.successGraduation,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Obx(
+                          () => Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Radio<StudyingIndicationFilter>(
+                                value: StudyingIndicationFilter.nonComplete,
+                                groupValue: controller.studyingIndication.value,
+                                onChanged: (StudyingIndicationFilter? value) {
+                                  controller
+                                      .updateStudyingIndicationValue(value!);
+                                  controller.callAllFilters();
+                                },
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                Dictionary.failureGraduation,
+                                style: TextStyles.mainText.copyWith(
+                                    color: ThemeColors.textColorPrimary),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Container(
+                    width: 500,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ThemeColors.hintTextColor.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: const Offset(5, 5),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shadowColor:
+                            const MaterialStatePropertyAll(Colors.transparent),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        backgroundColor: const MaterialStatePropertyAll(
+                            ThemeColors.backgroundSecondary),
+                        overlayColor: const MaterialStatePropertyAll(
+                            ThemeColors.backgroundPrimary),
+                        surfaceTintColor: const MaterialStatePropertyAll(
+                            ThemeColors.backgroundSecondary),
+                      ),
+                      onPressed: () {
+                        controller.clearFilters();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-                      backgroundColor: const MaterialStatePropertyAll(
-                          ThemeColors.backgroundSecondary),
-                      overlayColor: const MaterialStatePropertyAll(
-                          ThemeColors.backgroundPrimary),
-                      surfaceTintColor: const MaterialStatePropertyAll(
-                          ThemeColors.backgroundSecondary),
-                    ),
-                    onPressed: () {
-                      controller.clearFilters();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          Dictionary.clearFilters,
-                          style: TextStyles.header
-                              .copyWith(color: ThemeColors.textColorPrimary),
+                        child: Center(
+                          child: Text(
+                            Dictionary.clearFilters,
+                            style: TextStyles.header
+                                .copyWith(color: ThemeColors.textColorPrimary),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
